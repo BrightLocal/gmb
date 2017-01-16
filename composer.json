@@ -17,5 +17,6 @@
   },
   "autoload": {
     "classmap": ["."]
-  }
+  },
+  "target-dir" : "src"
 }
