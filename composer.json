@@ -1,0 +1,21 @@
+{
+  "name": "google/gmb",
+  "type": "library",
+  "description": "Google My Business API",
+  "keywords": [
+    "gmb"
+  ],
+  "homepage": "https://github.com/BrightLocal/gmb",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Google"
+    }
+  ],
+  "require": {
+    "google/apiclient": ">=2.0"
+  },
+  "autoload": {
+    "classmap": ["."]
+  }
+}
