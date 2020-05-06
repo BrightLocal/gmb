@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2010 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
  */
 
 /**
- * Service definition for MyBusiness (v3).
+ * Service definition for MyBusiness (v4).
  *
  * <p>
  * The Google My Business API provides an interface for managing business
@@ -35,11 +35,21 @@ class Google_Service_MyBusiness extends Google_Service
 
   public $accounts;
   public $accounts_admins;
+  public $accounts_invitations;
   public $accounts_locations;
   public $accounts_locations_admins;
+  public $accounts_locations_followers;
+  public $accounts_locations_localPosts;
+  public $accounts_locations_media;
+  public $accounts_locations_media_customers;
+  public $accounts_locations_questions;
+  public $accounts_locations_questions_answers;
   public $accounts_locations_reviews;
+  public $accounts_locations_verifications;
   public $attributes;
   public $categories;
+  public $chains;
+  public $googleLocations;
   
 
   /**
@@ -52,7 +62,8 @@ class Google_Service_MyBusiness extends Google_Service
     parent::__construct($client);
     $this->rootUrl = 'https://mybusiness.googleapis.com/';
     $this->servicePath = '';
-    $this->version = 'v3';
+    $this->batchPath = 'batch';
+    $this->version = 'v4';
     $this->serviceName = 'mybusiness';
 
     $this->accounts = new Google_Service_MyBusiness_Accounts_Resource(
@@ -61,8 +72,17 @@ class Google_Service_MyBusiness extends Google_Service
         'accounts',
         array(
           'methods' => array(
-            'deleteNotifications' => array(
-              'path' => 'v3/{+name}',
+            'create' => array(
+              'path' => 'v4/accounts',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'primaryOwner' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'deleteNotifications' => array(
+              'path' => 'v4/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -71,8 +91,18 @@ class Google_Service_MyBusiness extends Google_Service
                   'required' => true,
                 ),
               ),
+            ),'generateAccountNumber' => array(
+              'path' => 'v4/{+name}:generateAccountNumber',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
             ),'get' => array(
-              'path' => 'v3/{+name}',
+              'path' => 'v4/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -82,7 +112,7 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'getNotifications' => array(
-              'path' => 'v3/{+name}',
+              'path' => 'v4/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -92,20 +122,46 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v3/accounts',
+              'path' => 'v4/accounts',
               'httpMethod' => 'GET',
               'parameters' => array(
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
                 'pageToken' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+                'name' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'listRecommendGoogleLocations' => array(
+              'path' => 'v4/{+name}:recommendGoogleLocations',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
                 ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
               ),
             ),'update' => array(
-              'path' => 'v3/{+name}',
+              'path' => 'v4/{+name}',
               'httpMethod' => 'PUT',
               'parameters' => array(
                 'name' => array(
@@ -113,17 +169,13 @@ class Google_Service_MyBusiness extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'languageCode' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'validateOnly' => array(
                   'location' => 'query',
                   'type' => 'boolean',
                 ),
               ),
             ),'updateNotifications' => array(
-              'path' => 'v3/{+name}',
+              'path' => 'v4/{+name}',
               'httpMethod' => 'PUT',
               'parameters' => array(
                 'name' => array(
@@ -143,17 +195,17 @@ class Google_Service_MyBusiness extends Google_Service
         array(
           'methods' => array(
             'create' => array(
-              'path' => 'v3/{+name}/admins',
+              'path' => 'v4/{+parent}/admins',
               'httpMethod' => 'POST',
               'parameters' => array(
-                'name' => array(
+                'parent' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
                 ),
               ),
             ),'delete' => array(
-              'path' => 'v3/{+name}',
+              'path' => 'v4/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -163,13 +215,67 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v3/{+name}/admins',
+              'path' => 'v4/{+parent}/admins',
               'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'patch' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->accounts_invitations = new Google_Service_MyBusiness_AccountsInvitations_Resource(
+        $this,
+        $this->serviceName,
+        'invitations',
+        array(
+          'methods' => array(
+            'accept' => array(
+              'path' => 'v4/{+name}:accept',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'decline' => array(
+              'path' => 'v4/{+name}:decline',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v4/{+parent}/invitations',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'targetType' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),
@@ -183,7 +289,7 @@ class Google_Service_MyBusiness extends Google_Service
         array(
           'methods' => array(
             'associate' => array(
-              'path' => 'v3/{+name}:associate',
+              'path' => 'v4/{+name}:associate',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -193,7 +299,17 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'batchGet' => array(
-              'path' => 'v3/{+name}/locations:batchGet',
+              'path' => 'v4/{+name}/locations:batchGet',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'batchGetReviews' => array(
+              'path' => 'v4/{+name}/locations:batchGetReviews',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -203,7 +319,7 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'clearAssociation' => array(
-              'path' => 'v3/{+name}:clearAssociation',
+              'path' => 'v4/{+name}:clearAssociation',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -213,17 +329,13 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'create' => array(
-              'path' => 'v3/{+name}/locations',
+              'path' => 'v4/{+parent}/locations',
               'httpMethod' => 'POST',
               'parameters' => array(
-                'name' => array(
+                'parent' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'languageCode' => array(
-                  'location' => 'query',
-                  'type' => 'string',
                 ),
                 'validateOnly' => array(
                   'location' => 'query',
@@ -235,7 +347,7 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'delete' => array(
-              'path' => 'v3/{+name}',
+              'path' => 'v4/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -244,8 +356,18 @@ class Google_Service_MyBusiness extends Google_Service
                   'required' => true,
                 ),
               ),
+            ),'fetchVerificationOptions' => array(
+              'path' => 'v4/{+name}:fetchVerificationOptions',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
             ),'findMatches' => array(
-              'path' => 'v3/{+name}:findMatches',
+              'path' => 'v4/{+name}:findMatches',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -255,7 +377,7 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v3/{+name}',
+              'path' => 'v4/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -265,7 +387,17 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'getGoogleUpdated' => array(
-              'path' => 'v3/{+name}:googleUpdated',
+              'path' => 'v4/{+name}:googleUpdated',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'getServiceList' => array(
+              'path' => 'v4/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -275,29 +407,37 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v3/{+name}/locations',
+              'path' => 'v4/{+parent}/locations',
               'httpMethod' => 'GET',
               'parameters' => array(
-                'name' => array(
+                'parent' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'filter' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
                 ),
                 'pageSize' => array(
                   'location' => 'query',
                   'type' => 'integer',
                 ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'languageCode' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'orderBy' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
               ),
             ),'patch' => array(
-              'path' => 'v3/{+name}',
+              'path' => 'v4/{+name}',
               'httpMethod' => 'PATCH',
               'parameters' => array(
                 'name' => array(
@@ -305,7 +445,7 @@ class Google_Service_MyBusiness extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
-                'languageCode' => array(
+                'updateMask' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -313,13 +453,13 @@ class Google_Service_MyBusiness extends Google_Service
                   'location' => 'query',
                   'type' => 'boolean',
                 ),
-                'fieldMask' => array(
+                'attributeMask' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
               ),
             ),'reportInsights' => array(
-              'path' => 'v3/{+name}/locations:reportInsights',
+              'path' => 'v4/{+name}/locations:reportInsights',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -329,7 +469,31 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'transfer' => array(
-              'path' => 'v3/{+name}:transfer',
+              'path' => 'v4/{+name}:transfer',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'updateServiceList' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'updateMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'verify' => array(
+              'path' => 'v4/{+name}:verify',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
@@ -349,17 +513,17 @@ class Google_Service_MyBusiness extends Google_Service
         array(
           'methods' => array(
             'create' => array(
-              'path' => 'v3/{+name}/admins',
+              'path' => 'v4/{+parent}/admins',
               'httpMethod' => 'POST',
               'parameters' => array(
-                'name' => array(
+                'parent' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
                 ),
               ),
             ),'delete' => array(
-              'path' => 'v3/{+name}',
+              'path' => 'v4/{+name}',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -369,10 +533,364 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v3/{+name}/admins',
+              'path' => 'v4/{+parent}/admins',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'patch' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->accounts_locations_followers = new Google_Service_MyBusiness_AccountsLocationsFollowers_Resource(
+        $this,
+        $this->serviceName,
+        'followers',
+        array(
+          'methods' => array(
+            'getMetadata' => array(
+              'path' => 'v4/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->accounts_locations_localPosts = new Google_Service_MyBusiness_AccountsLocationsLocalPosts_Resource(
+        $this,
+        $this->serviceName,
+        'localPosts',
+        array(
+          'methods' => array(
+            'create' => array(
+              'path' => 'v4/{+parent}/localPosts',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'delete' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'DELETE',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'get' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v4/{+parent}/localPosts',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'patch' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'updateMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'reportInsights' => array(
+              'path' => 'v4/{+name}/localPosts:reportInsights',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->accounts_locations_media = new Google_Service_MyBusiness_AccountsLocationsMedia_Resource(
+        $this,
+        $this->serviceName,
+        'media',
+        array(
+          'methods' => array(
+            'create' => array(
+              'path' => 'v4/{+parent}/media',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'delete' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'DELETE',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'get' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v4/{+parent}/media',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'patch' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'updateMask' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'startUpload' => array(
+              'path' => 'v4/{+parent}/media:startUpload',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->accounts_locations_media_customers = new Google_Service_MyBusiness_AccountsLocationsMediaCustomers_Resource(
+        $this,
+        $this->serviceName,
+        'customers',
+        array(
+          'methods' => array(
+            'get' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v4/{+parent}/media/customers',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->accounts_locations_questions = new Google_Service_MyBusiness_AccountsLocationsQuestions_Resource(
+        $this,
+        $this->serviceName,
+        'questions',
+        array(
+          'methods' => array(
+            'create' => array(
+              'path' => 'v4/{+parent}/questions',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'delete' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'DELETE',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v4/{+parent}/questions',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'answersPerQuestion' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'filter' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'orderBy' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'patch' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'PATCH',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->accounts_locations_questions_answers = new Google_Service_MyBusiness_AccountsLocationsQuestionsAnswers_Resource(
+        $this,
+        $this->serviceName,
+        'answers',
+        array(
+          'methods' => array(
+            'delete' => array(
+              'path' => 'v4/{+parent}/answers:delete',
+              'httpMethod' => 'DELETE',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v4/{+parent}/answers',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'orderBy' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'upsert' => array(
+              'path' => 'v4/{+parent}/answers:upsert',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'parent' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
@@ -389,7 +907,7 @@ class Google_Service_MyBusiness extends Google_Service
         array(
           'methods' => array(
             'deleteReply' => array(
-              'path' => 'v3/{+name}/reply',
+              'path' => 'v4/{+name}/reply',
               'httpMethod' => 'DELETE',
               'parameters' => array(
                 'name' => array(
@@ -399,7 +917,7 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'get' => array(
-              'path' => 'v3/{+name}',
+              'path' => 'v4/{+name}',
               'httpMethod' => 'GET',
               'parameters' => array(
                 'name' => array(
@@ -409,35 +927,73 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'list' => array(
-              'path' => 'v3/{+name}/reviews',
+              'path' => 'v4/{+parent}/reviews',
               'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'orderBy' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'updateReply' => array(
+              'path' => 'v4/{+name}/reply',
+              'httpMethod' => 'PUT',
               'parameters' => array(
                 'name' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
                 ),
-                'orderBy' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'pageSize' => array(
-                  'location' => 'query',
-                  'type' => 'integer',
-                ),
               ),
-            ),'reply' => array(
-              'path' => 'v3/{+name}/reply',
+            ),
+          )
+        )
+    );
+    $this->accounts_locations_verifications = new Google_Service_MyBusiness_AccountsLocationsVerifications_Resource(
+        $this,
+        $this->serviceName,
+        'verifications',
+        array(
+          'methods' => array(
+            'complete' => array(
+              'path' => 'v4/{+name}:complete',
               'httpMethod' => 'POST',
               'parameters' => array(
                 'name' => array(
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v4/{+parent}/verifications',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'parent' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'pageSize' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),
@@ -451,14 +1007,22 @@ class Google_Service_MyBusiness extends Google_Service
         array(
           'methods' => array(
             'list' => array(
-              'path' => 'v3/attributes',
+              'path' => 'v4/attributes',
               'httpMethod' => 'GET',
               'parameters' => array(
-                'languageCode' => array(
+                'name' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'name' => array(
+                'categoryId' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'country' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'languageCode' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -466,15 +1030,7 @@ class Google_Service_MyBusiness extends Google_Service
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'country' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
                 'pageToken' => array(
-                  'location' => 'query',
-                  'type' => 'string',
-                ),
-                'categoryId' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -489,19 +1045,41 @@ class Google_Service_MyBusiness extends Google_Service
         'categories',
         array(
           'methods' => array(
-            'list' => array(
-              'path' => 'v3/categories',
+            'batchGet' => array(
+              'path' => 'v4/categories:batchGet',
               'httpMethod' => 'GET',
               'parameters' => array(
-                'searchTerm' => array(
+                'languageCode' => array(
                   'location' => 'query',
                   'type' => 'string',
+                ),
+                'categoryIds' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
                 ),
                 'regionCode' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
-                'pageToken' => array(
+                'view' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+              ),
+            ),'list' => array(
+              'path' => 'v4/categories',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'regionCode' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'languageCode' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'searchTerm' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
@@ -509,11 +1087,72 @@ class Google_Service_MyBusiness extends Google_Service
                   'location' => 'query',
                   'type' => 'integer',
                 ),
-                'languageCode' => array(
+                'pageToken' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'view' => array(
                   'location' => 'query',
                   'type' => 'string',
                 ),
               ),
+            ),
+          )
+        )
+    );
+    $this->chains = new Google_Service_MyBusiness_Chains_Resource(
+        $this,
+        $this->serviceName,
+        'chains',
+        array(
+          'methods' => array(
+            'get' => array(
+              'path' => 'v4/{+name}',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'search' => array(
+              'path' => 'v4/chains:search',
+              'httpMethod' => 'GET',
+              'parameters' => array(
+                'chainDisplayName' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
+                'resultCount' => array(
+                  'location' => 'query',
+                  'type' => 'integer',
+                ),
+              ),
+            ),
+          )
+        )
+    );
+    $this->googleLocations = new Google_Service_MyBusiness_GoogleLocations_Resource(
+        $this,
+        $this->serviceName,
+        'googleLocations',
+        array(
+          'methods' => array(
+            'report' => array(
+              'path' => 'v4/{+name}:report',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'name' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
+            ),'search' => array(
+              'path' => 'v4/googleLocations:search',
+              'httpMethod' => 'POST',
+              'parameters' => array(),
             ),
           )
         )
@@ -534,9 +1173,32 @@ class Google_Service_MyBusiness_Accounts_Resource extends Google_Service_Resourc
 {
 
   /**
-   * Clears the pubsub notification settings for the account.
+   * Creates an account with the specified name and type under the given parent.
    *
-   * Available since v3.1. (accounts.deleteNotifications)
+   *  Personal accounts and Organizations cannot be created.   User Groups cannot
+   * be created with a Personal account as primary owner.   Location Groups cannot
+   * be created with a primary owner of a Personal account if the Personal account
+   * is in an Organization.   Location Groups cannot own Location Groups.
+   * (accounts.create)
+   *
+   * @param Google_Account $postBody
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param string primaryOwner The resource name of the account which will be
+   * the primary owner of the account being created. It should be of the form
+   * `accounts/{account_id}/`.
+   * @return Google_Service_MyBusiness_Account
+   */
+  public function create(Google_Service_MyBusiness_Account $postBody, $optParams = array())
+  {
+    $params = array('postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('create', array($params), "Google_Service_MyBusiness_Account");
+  }
+
+  /**
+   * Clears the pubsub notification settings for the account.
+   * (accounts.deleteNotifications)
    *
    * @param string $name The resource name for the notification settings to be
    * cleared.
@@ -548,6 +1210,24 @@ class Google_Service_MyBusiness_Accounts_Resource extends Google_Service_Resourc
     $params = array('name' => $name);
     $params = array_merge($params, $optParams);
     return $this->call('deleteNotifications', array($params), "Google_Service_MyBusiness_MybusinessEmpty");
+  }
+
+  /**
+   * Generates an account number for this account. The account number is not
+   * provisioned when an account is created. Use this request to create an account
+   * number when it is required. (accounts.generateAccountNumber)
+   *
+   * @param string $name The name of the account to generate an account number
+   * for.
+   * @param Google_GenerateAccountNumberRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_Account
+   */
+  public function generateAccountNumber($name, Google_Service_MyBusiness_GenerateAccountNumberRequest $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('generateAccountNumber', array($params), "Google_Service_MyBusiness_Account");
   }
 
   /**
@@ -567,8 +1247,7 @@ class Google_Service_MyBusiness_Accounts_Resource extends Google_Service_Resourc
 
   /**
    * Returns the pubsub notification settings for the account.
-   *
-   * Available since v3.1. (accounts.getNotifications)
+   * (accounts.getNotifications)
    *
    * @param string $name The notification settings resource name.
    * @param array $optParams Optional parameters.
@@ -588,11 +1267,22 @@ class Google_Service_MyBusiness_Accounts_Resource extends Google_Service_Resourc
    *
    * @param array $optParams Optional parameters.
    *
+   * @opt_param int pageSize How many accounts to fetch per page. Default is 20,
+   * minimum is 2, and maximum page size is 20.
    * @opt_param string pageToken If specified, the next page of accounts is
    * retrieved. The `pageToken` is returned when a call to `accounts.list` returns
    * more results than can fit into the requested page size.
-   * @opt_param int pageSize How many accounts to fetch per page. Default is 50,
-   * minimum is 1, and maximum page size is 50.
+   * @opt_param string name The resource name of the account for which the list of
+   * directly accessible accounts is to be retrieved. This only makes sense for
+   * Organizations and User Groups. If empty, will return `ListAccounts` for the
+   * authenticated user.
+   * @opt_param string filter A filter constraining the accounts to return. The
+   * response includes only entries that match the filter. If `filter` is empty,
+   * then no constraints are applied and all accounts (paginated) are retrieved
+   * for the requested account.
+   *
+   * For example, a request with the filter `type=USER_GROUP` will only return
+   * user groups.
    * @return Google_Service_MyBusiness_ListAccountsResponse
    */
   public function listAccounts($optParams = array())
@@ -603,16 +1293,45 @@ class Google_Service_MyBusiness_Accounts_Resource extends Google_Service_Resourc
   }
 
   /**
+   * List all the GoogleLocations that have been recommended to the specified GMB
+   * account. Recommendations are provided for personal accounts and location
+   * groups only, requests for all other account types will result in an error.
+   * The recommendations for location groups are based on the locations in that
+   * group.
+   *
+   * The recommendations for personal accounts are based on all of the locations
+   * that the user has access to on Google My Business (which includes locations
+   * they can access through location groups), and is a superset of all
+   * recommendations generated for the user.
+   * (accounts.listRecommendGoogleLocations)
+   *
+   * @param string $name Name of the account resource to fetch recommended Google
+   * locations for.
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param int pageSize How many locations to fetch per page. Default is 25,
+   * minimum is 1, and maximum page size is 100.
+   * @opt_param string pageToken If specified, the next page of locations is
+   * retrieved.
+   * @return Google_Service_MyBusiness_ListRecommendedGoogleLocationsResponse
+   */
+  public function listRecommendGoogleLocations($name, $optParams = array())
+  {
+    $params = array('name' => $name);
+    $params = array_merge($params, $optParams);
+    return $this->call('listRecommendGoogleLocations', array($params), "Google_Service_MyBusiness_ListRecommendedGoogleLocationsResponse");
+  }
+
+  /**
    * Updates the specified business account. Personal accounts cannot be updated
-   * using this method. Note: At this time the only editable field for an account
-   * is `account_name`. Any other fields passed in (such as `type` or `role`) are
+   * using this method. Note: The only editable field for an account is
+   * `account_name`. Any other fields passed in (such as `type` or `role`) are
    * ignored. (accounts.update)
    *
    * @param string $name The name of the account to update.
    * @param Google_Account $postBody
    * @param array $optParams Optional parameters.
    *
-   * @opt_param string languageCode The language of the account update.
    * @opt_param bool validateOnly If true, the request is validated without
    * actually updating the account.
    * @return Google_Service_MyBusiness_Account
@@ -625,14 +1344,15 @@ class Google_Service_MyBusiness_Accounts_Resource extends Google_Service_Resourc
   }
 
   /**
-   * Sets the pubsub notification settings for the account informing MyBusiness
-   * which topic to send pubsub notifications to for new reviews for locations
-   * administered by the account.
+   * Sets the pubsub notification settings for the account informing My Business
+   * which topic to send pubsub notifications for:
    *
-   * An account will only have one notification settings resource and only one
-   * pubsub topic may be set.
+   * - New reviews for locations administered by the account. - Updated reviews
+   * for locations administered by the account. - New `GoogleUpdates` for
+   * locations administered by the account.
    *
-   * Available since v3.1. (accounts.updateNotifications)
+   * An account will only have one notification settings resource, and only one
+   * pubsub topic can be set. (accounts.updateNotifications)
    *
    * @param string $name The notification settings resource name.
    * @param Google_Notifications $postBody
@@ -661,20 +1381,18 @@ class Google_Service_MyBusiness_AccountsAdmins_Resource extends Google_Service_R
   /**
    * Invites the specified user to become an administrator for the specified
    * account. The invitee must accept the invitation in order to be granted access
-   * to the account. (admins.create)
+   * to the account. See AcceptInvitation to programmatically accept an
+   * invitation. (admins.create)
    *
-   * @param string $name The resource name. For account admins, this is in the
-   * form: `accounts/{account_id}/admins/{admin_id}`
-   *
-   * For location admins, this is in the form:
-   * `accounts/{account_id}/locations/{location_id}/admins/{admin_id}`
+   * @param string $parent The resource name of the account this admin is created
+   * for.
    * @param Google_Admin $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_MyBusiness_Admin
    */
-  public function create($name, Google_Service_MyBusiness_Admin $postBody, $optParams = array())
+  public function create($parent, Google_Service_MyBusiness_Admin $postBody, $optParams = array())
   {
-    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array('parent' => $parent, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
     return $this->call('create', array($params), "Google_Service_MyBusiness_Admin");
   }
@@ -697,16 +1415,93 @@ class Google_Service_MyBusiness_AccountsAdmins_Resource extends Google_Service_R
   /**
    * Lists the admins for the specified account. (admins.listAccountsAdmins)
    *
-   * @param string $name The name of the account from which to retrieve a list of
-   * admins.
+   * @param string $parent The name of the account from which to retrieve a list
+   * of admins.
    * @param array $optParams Optional parameters.
    * @return Google_Service_MyBusiness_ListAccountAdminsResponse
    */
-  public function listAccountsAdmins($name, $optParams = array())
+  public function listAccountsAdmins($parent, $optParams = array())
   {
-    $params = array('name' => $name);
+    $params = array('parent' => $parent);
     $params = array_merge($params, $optParams);
     return $this->call('list', array($params), "Google_Service_MyBusiness_ListAccountAdminsResponse");
+  }
+
+  /**
+   * Updates the Admin for the specified Account Admin. Only the AdminRole of the
+   * Admin can be updated. (admins.patch)
+   *
+   * @param string $name The resource name of the admin to update.
+   * @param Google_Admin $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_Admin
+   */
+  public function patch($name, Google_Service_MyBusiness_Admin $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('patch', array($params), "Google_Service_MyBusiness_Admin");
+  }
+}
+/**
+ * The "invitations" collection of methods.
+ * Typical usage is:
+ *  <code>
+ *   $mybusinessService = new Google_Service_MyBusiness(...);
+ *   $invitations = $mybusinessService->invitations;
+ *  </code>
+ */
+class Google_Service_MyBusiness_AccountsInvitations_Resource extends Google_Service_Resource
+{
+
+  /**
+   * Accepts the specified invitation. (invitations.accept)
+   *
+   * @param string $name The name of the invitation that is being accepted.
+   * @param Google_AcceptInvitationRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MybusinessEmpty
+   */
+  public function accept($name, Google_Service_MyBusiness_AcceptInvitationRequest $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('accept', array($params), "Google_Service_MyBusiness_MybusinessEmpty");
+  }
+
+  /**
+   * Declines the specified invitation. (invitations.decline)
+   *
+   * @param string $name The name of the account invitation that is being
+   * declined.
+   * @param Google_DeclineInvitationRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MybusinessEmpty
+   */
+  public function decline($name, Google_Service_MyBusiness_DeclineInvitationRequest $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('decline', array($params), "Google_Service_MyBusiness_MybusinessEmpty");
+  }
+
+  /**
+   * Lists pending invitations for the specified account.
+   * (invitations.listAccountsInvitations)
+   *
+   * @param string $parent The name of the account from which the list of
+   * invitations is being retrieved.
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param string targetType Specifies which target types should appear in
+   * the response.
+   * @return Google_Service_MyBusiness_ListInvitationsResponse
+   */
+  public function listAccountsInvitations($parent, $optParams = array())
+  {
+    $params = array('parent' => $parent);
+    $params = array_merge($params, $optParams);
+    return $this->call('list', array($params), "Google_Service_MyBusiness_ListInvitationsResponse");
   }
 }
 /**
@@ -755,6 +1550,25 @@ class Google_Service_MyBusiness_AccountsLocations_Resource extends Google_Servic
   }
 
   /**
+   * Returns the paginated list of reviews for all specified locations. This
+   * operation is only valid if the specified locations are verified. Note:
+   * Reviews are limited to a batch size of 200 `location_names` per call.
+   * (locations.batchGetReviews)
+   *
+   * @param string $name The name of the account from which to retrieve a list of
+   * reviews across multiple locations.
+   * @param Google_BatchGetReviewsRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_BatchGetReviewsResponse
+   */
+  public function batchGetReviews($name, Google_Service_MyBusiness_BatchGetReviewsRequest $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('batchGetReviews', array($params), "Google_Service_MyBusiness_BatchGetReviewsResponse");
+  }
+
+  /**
    * Clears an association between a location and its place ID. This operation is
    * only valid if the location is unverified. (locations.clearAssociation)
    *
@@ -774,20 +1588,20 @@ class Google_Service_MyBusiness_AccountsLocations_Resource extends Google_Servic
    * Creates a new location owned by the specified account, and returns it.
    * (locations.create)
    *
-   * @param string $name The name of the account in which to create this location.
+   * @param string $parent The name of the account in which to create this
+   * location.
    * @param Google_Location $postBody
    * @param array $optParams Optional parameters.
    *
-   * @opt_param string languageCode The language of the location.
    * @opt_param bool validateOnly If true, the request is validated without
    * actually creating the location.
    * @opt_param string requestId A unique request ID for the server to detect
-   * duplicated requests. UUIDs are recommended. Max length is 50 characters.
+   * duplicated requests. We recommend using UUIDs. Max length is 50 characters.
    * @return Google_Service_MyBusiness_Location
    */
-  public function create($name, Google_Service_MyBusiness_Location $postBody, $optParams = array())
+  public function create($parent, Google_Service_MyBusiness_Location $postBody, $optParams = array())
   {
-    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array('parent' => $parent, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
     return $this->call('create', array($params), "Google_Service_MyBusiness_Location");
   }
@@ -795,10 +1609,9 @@ class Google_Service_MyBusiness_AccountsLocations_Resource extends Google_Servic
   /**
    * Deletes a location.
    *
-   * Note: If this location has an associated Google+ page, as indicated by a
-   * `plus_page_id` in the LocationKey, it cannot be deleted using the API;
-   * instead, use the [Google My Business](https://business.google.com/manage/)
-   * website.
+   * Note: If this location cannot be deleted using the API as marked in the
+   * LocationState, use the [Google My
+   * Business](https://business.google.com/manage/) website.
    *
    * Returns `NOT_FOUND` if the location does not exist. (locations.delete)
    *
@@ -811,6 +1624,22 @@ class Google_Service_MyBusiness_AccountsLocations_Resource extends Google_Servic
     $params = array('name' => $name);
     $params = array_merge($params, $optParams);
     return $this->call('delete', array($params), "Google_Service_MyBusiness_MybusinessEmpty");
+  }
+
+  /**
+   * Reports all eligible verification options for a location in a specific
+   * language. (locations.fetchVerificationOptions)
+   *
+   * @param string $name Resource name of the location to verify.
+   * @param Google_FetchVerificationOptionsRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_FetchVerificationOptionsResponse
+   */
+  public function fetchVerificationOptions($name, Google_Service_MyBusiness_FetchVerificationOptionsRequest $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('fetchVerificationOptions', array($params), "Google_Service_MyBusiness_FetchVerificationOptionsResponse");
   }
 
   /**
@@ -861,12 +1690,35 @@ class Google_Service_MyBusiness_AccountsLocations_Resource extends Google_Servic
   }
 
   /**
+   * Get the specified service list of a location. (locations.getServiceList)
+   *
+   * @param string $name Required. Google identifier for this location in the
+   * form: `accounts/{account_id}/locations/{location_id}/servicelist`
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_ServiceList
+   */
+  public function getServiceList($name, $optParams = array())
+  {
+    $params = array('name' => $name);
+    $params = array_merge($params, $optParams);
+    return $this->call('getServiceList', array($params), "Google_Service_MyBusiness_ServiceList");
+  }
+
+  /**
    * Lists the locations for the specified account.
    * (locations.listAccountsLocations)
    *
-   * @param string $name The name of the account to fetch locations from.
+   * @param string $parent The name of the account to fetch locations from. If the
+   * Account is of AccountType PERSONAL, only Locations that are directly owned by
+   * the Account are returned, otherwise it will return all accessible locations
+   * from the Account, either directly or indirectly.
    * @param array $optParams Optional parameters.
    *
+   * @opt_param int pageSize How many locations to fetch per page. Default is 100,
+   * minimum is 1, and maximum page size is 100.
+   * @opt_param string pageToken If specified, it fetches the next `page` of
+   * locations. The page token is returned by previous calls to `ListLocations`
+   * when there were more locations than could fit in the requested page size.
    * @opt_param string filter A filter constraining the locations to return. The
    * response includes only entries that match the filter. If `filter` is empty,
    * then constraints are applied and all locations (paginated) are retrieved for
@@ -874,17 +1726,21 @@ class Google_Service_MyBusiness_AccountsLocations_Resource extends Google_Servic
    *
    * For more information about valid fields and example usage, see [Work with
    * Location Data Guide](https://developers.google.com/my-business/content
-   * /location-data#filter_results_when_listing_locations)
-   * @opt_param string pageToken If specified, it fetches the next `page` of
-   * locations. The page token is returned by previous calls to ListLocations when
-   * there were more locations than could fit in the requested page size.
-   * @opt_param int pageSize How many locations to fetch per page. Default is 100,
-   * minimum is 1, and maximum page size is 100.
+   * /location-data#filter_results_when_you_list_locations).
+   * @opt_param string languageCode The BCP 47 code of language to get display
+   * location properties in. If this language is not available, they will be
+   * provided in the language of the location. If neither is available, they will
+   * be provided in English.
+   * @opt_param string orderBy Sorting order for the request. Multiple fields
+   * should be comma-separated, following SQL syntax. The default sorting order is
+   * ascending. To specify descending order, a suffix " desc" should be added.
+   * Valid fields to order_by are location_name and store_code. For example:
+   * "location_name, store_code desc" or "location_name" or "store_code desc"
    * @return Google_Service_MyBusiness_ListLocationsResponse
    */
-  public function listAccountsLocations($name, $optParams = array())
+  public function listAccountsLocations($parent, $optParams = array())
   {
-    $params = array('name' => $name);
+    $params = array('parent' => $parent);
     $params = array_merge($params, $optParams);
     return $this->call('list', array($params), "Google_Service_MyBusiness_ListLocationsResponse");
   }
@@ -900,15 +1756,19 @@ class Google_Service_MyBusiness_AccountsLocations_Resource extends Google_Servic
    * @param Google_Location $postBody
    * @param array $optParams Optional parameters.
    *
-   * @opt_param string languageCode The language of the location update. Currently
-   * this is used to disambiguate what localized categories are valid for this
-   * update request.
-   * @opt_param bool validateOnly If true, the request is validated without
-   * actually updating the location.
-   * @opt_param string fieldMask The specific fields to update. If no mask is
+   * @opt_param string updateMask The specific fields to update. If no mask is
    * specified, then this is treated as a full update and all fields are set to
    * the values passed in, which may include unsetting empty fields in the
    * request.
+   * @opt_param bool validateOnly If true, the request is validated without
+   * actually updating the location.
+   * @opt_param string attributeMask The IDs of the attributes to update. Only
+   * attributes noted in the mask will be updated. If an attribute is present in
+   * the mask and not in the location, it will be removed. An empty mask will
+   * update all attributes.
+   *
+   * Whenever this field is set, the update_mask should include attributes as one
+   * of the fields to update.
    * @return Google_Service_MyBusiness_Location
    */
   public function patch($name, Google_Service_MyBusiness_Location $postBody, $optParams = array())
@@ -922,9 +1782,7 @@ class Google_Service_MyBusiness_AccountsLocations_Resource extends Google_Servic
    * Returns a report containing insights on one or more metrics by location.
    *
    * Note: Insight reports are limited to a batch size of 10 `location_names` per
-   * call.
-   *
-   * Available since v3.2. (locations.reportInsights)
+   * call. (locations.reportInsights)
    *
    * @param string $name The account resource name.
    * @param Google_ReportLocationInsightsRequest $postBody
@@ -939,10 +1797,11 @@ class Google_Service_MyBusiness_AccountsLocations_Resource extends Google_Servic
   }
 
   /**
-   * Transfer a location from one account to another. To perform a transfer, a
-   * user must be an owner of the account the location is currently associated
-   * with and at least a manager of the destination account. Returns the Location
-   * with its new resource name. (locations.transfer)
+   * Moves a location from an account that the user owns to another account that
+   * the same user administers. The user must be an owner of the account the
+   * location is currently associated with and must also be at least a manager of
+   * the destination account. Returns the Location with its new resource name.
+   * (locations.transfer)
    *
    * @param string $name The name of the location to transfer.
    * @param Google_TransferLocationRequest $postBody
@@ -954,6 +1813,43 @@ class Google_Service_MyBusiness_AccountsLocations_Resource extends Google_Servic
     $params = array('name' => $name, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
     return $this->call('transfer', array($params), "Google_Service_MyBusiness_Location");
+  }
+
+  /**
+   * Updates the specified service list of a location.
+   * (locations.updateServiceList)
+   *
+   * @param string $name Required. Google identifier for this location in the
+   * form: `accounts/{account_id}/locations/{location_id}/serviceList`
+   * @param Google_ServiceList $postBody
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param string updateMask Optional. The specific fields to update. If no
+   * mask is specified, then this is treated as a full update and all fields are
+   * set to the values passed in, which may include unsetting empty fields in the
+   * request. Repeated field items can not be individually updated.
+   * @return Google_Service_MyBusiness_ServiceList
+   */
+  public function updateServiceList($name, Google_Service_MyBusiness_ServiceList $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('updateServiceList', array($params), "Google_Service_MyBusiness_ServiceList");
+  }
+
+  /**
+   * Starts the verification process for a location. (locations.verify)
+   *
+   * @param string $name Resource name of the location to verify.
+   * @param Google_VerifyLocationRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_VerifyLocationResponse
+   */
+  public function verify($name, Google_Service_MyBusiness_VerifyLocationRequest $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('verify', array($params), "Google_Service_MyBusiness_VerifyLocationResponse");
   }
 }
 
@@ -971,20 +1867,18 @@ class Google_Service_MyBusiness_AccountsLocationsAdmins_Resource extends Google_
   /**
    * Invites the specified user to become an administrator for the specified
    * location. The invitee must accept the invitation in order to be granted
-   * access to the location. (admins.create)
+   * access to the location. See AcceptInvitation to programmatically accept an
+   * invitation. (admins.create)
    *
-   * @param string $name The resource name. For account admins, this is in the
-   * form: `accounts/{account_id}/admins/{admin_id}`
-   *
-   * For location admins, this is in the form:
-   * `accounts/{account_id}/locations/{location_id}/admins/{admin_id}`
+   * @param string $parent The resource name of the location this admin is created
+   * for.
    * @param Google_Admin $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_MyBusiness_Admin
    */
-  public function create($name, Google_Service_MyBusiness_Admin $postBody, $optParams = array())
+  public function create($parent, Google_Service_MyBusiness_Admin $postBody, $optParams = array())
   {
-    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array('parent' => $parent, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
     return $this->call('create', array($params), "Google_Service_MyBusiness_Admin");
   }
@@ -1009,15 +1903,491 @@ class Google_Service_MyBusiness_AccountsLocationsAdmins_Resource extends Google_
    * Lists all of the admins for the specified location.
    * (admins.listAccountsLocationsAdmins)
    *
-   * @param string $name The name of the location to list admins of.
+   * @param string $parent The name of the location to list admins of.
    * @param array $optParams Optional parameters.
    * @return Google_Service_MyBusiness_ListLocationAdminsResponse
    */
-  public function listAccountsLocationsAdmins($name, $optParams = array())
+  public function listAccountsLocationsAdmins($parent, $optParams = array())
+  {
+    $params = array('parent' => $parent);
+    $params = array_merge($params, $optParams);
+    return $this->call('list', array($params), "Google_Service_MyBusiness_ListLocationAdminsResponse");
+  }
+
+  /**
+   * Updates the Admin for the specified Location Admin. Only the AdminRole of the
+   * Admin can be updated. (admins.patch)
+   *
+   * @param string $name The resource name of the admin to update.
+   * @param Google_Admin $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_Admin
+   */
+  public function patch($name, Google_Service_MyBusiness_Admin $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('patch', array($params), "Google_Service_MyBusiness_Admin");
+  }
+}
+/**
+ * The "followers" collection of methods.
+ * Typical usage is:
+ *  <code>
+ *   $mybusinessService = new Google_Service_MyBusiness(...);
+ *   $followers = $mybusinessService->followers;
+ *  </code>
+ */
+class Google_Service_MyBusiness_AccountsLocationsFollowers_Resource extends Google_Service_Resource
+{
+
+  /**
+   * Get the followers settings for a location.
+   *
+   * NOT_FOUND is returned if either the account or the location doesn't exist.
+   * PRECONDITION_FAILED is returned if the location is not verified nor connected
+   * to Maps. (followers.getMetadata)
+   *
+   * @param string $name The resource name of the location's followers metadata.
+   * accounts/{account_id}/locations/{location_id}/followers/metadata
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_FollowersMetadata
+   */
+  public function getMetadata($name, $optParams = array())
   {
     $params = array('name' => $name);
     $params = array_merge($params, $optParams);
-    return $this->call('list', array($params), "Google_Service_MyBusiness_ListLocationAdminsResponse");
+    return $this->call('getMetadata', array($params), "Google_Service_MyBusiness_FollowersMetadata");
+  }
+}
+/**
+ * The "localPosts" collection of methods.
+ * Typical usage is:
+ *  <code>
+ *   $mybusinessService = new Google_Service_MyBusiness(...);
+ *   $localPosts = $mybusinessService->localPosts;
+ *  </code>
+ */
+class Google_Service_MyBusiness_AccountsLocationsLocalPosts_Resource extends Google_Service_Resource
+{
+
+  /**
+   * Creates a new local post associated with the specified location, and returns
+   * it. (localPosts.create)
+   *
+   * @param string $parent The name of the location in which to create this local
+   * post.
+   * @param Google_LocalPost $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_LocalPost
+   */
+  public function create($parent, Google_Service_MyBusiness_LocalPost $postBody, $optParams = array())
+  {
+    $params = array('parent' => $parent, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('create', array($params), "Google_Service_MyBusiness_LocalPost");
+  }
+
+  /**
+   * Deletes a local post. Returns `NOT_FOUND` if the local post does not exist.
+   * (localPosts.delete)
+   *
+   * @param string $name The name of the local post to delete.
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MybusinessEmpty
+   */
+  public function delete($name, $optParams = array())
+  {
+    $params = array('name' => $name);
+    $params = array_merge($params, $optParams);
+    return $this->call('delete', array($params), "Google_Service_MyBusiness_MybusinessEmpty");
+  }
+
+  /**
+   * Gets the specified local post. Returns `NOT_FOUND` if the local post does not
+   * exist. (localPosts.get)
+   *
+   * @param string $name The name of the local post to fetch.
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_LocalPost
+   */
+  public function get($name, $optParams = array())
+  {
+    $params = array('name' => $name);
+    $params = array_merge($params, $optParams);
+    return $this->call('get', array($params), "Google_Service_MyBusiness_LocalPost");
+  }
+
+  /**
+   * Returns a list of local posts associated with a location.
+   * (localPosts.listAccountsLocationsLocalPosts)
+   *
+   * @param string $parent The name of the location whose local posts will be
+   * listed.
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param int pageSize How many local posts to return per page. Default of
+   * 20. The minimum is 1, and maximum page size is 100.
+   * @opt_param string pageToken If specified, returns the next page of local
+   * posts.
+   * @return Google_Service_MyBusiness_ListLocalPostsResponse
+   */
+  public function listAccountsLocationsLocalPosts($parent, $optParams = array())
+  {
+    $params = array('parent' => $parent);
+    $params = array_merge($params, $optParams);
+    return $this->call('list', array($params), "Google_Service_MyBusiness_ListLocalPostsResponse");
+  }
+
+  /**
+   * Updates the specified local post and returns the updated local post.
+   * (localPosts.patch)
+   *
+   * @param string $name The name of the local post to update.
+   * @param Google_LocalPost $postBody
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param string updateMask The specific fields to update. You must specify
+   * each field that is being updated in the mask.
+   * @return Google_Service_MyBusiness_LocalPost
+   */
+  public function patch($name, Google_Service_MyBusiness_LocalPost $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('patch', array($params), "Google_Service_MyBusiness_LocalPost");
+  }
+
+  /**
+   * Returns insights for a set of local posts associated with a single listing.
+   * Which metrics and how they are reported are options specified in the request
+   * proto. Note: Insight reports are limited to 100 `local_post_names` per call.
+   * (localPosts.reportInsights)
+   *
+   * @param string $name Required. The name of the location for which to fetch
+   * insights.
+   * @param Google_ReportLocalPostInsightsRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_ReportLocalPostInsightsResponse
+   */
+  public function reportInsights($name, Google_Service_MyBusiness_ReportLocalPostInsightsRequest $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('reportInsights', array($params), "Google_Service_MyBusiness_ReportLocalPostInsightsResponse");
+  }
+}
+/**
+ * The "media" collection of methods.
+ * Typical usage is:
+ *  <code>
+ *   $mybusinessService = new Google_Service_MyBusiness(...);
+ *   $media = $mybusinessService->media;
+ *  </code>
+ */
+class Google_Service_MyBusiness_AccountsLocationsMedia_Resource extends Google_Service_Resource
+{
+
+  /**
+   * Creates a new media item for the location. (media.create)
+   *
+   * @param string $parent The resource name of the location where this media item
+   * will be created.
+   * @param Google_MediaItem $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MediaItem
+   */
+  public function create($parent, Google_Service_MyBusiness_MediaItem $postBody, $optParams = array())
+  {
+    $params = array('parent' => $parent, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('create', array($params), "Google_Service_MyBusiness_MediaItem");
+  }
+
+  /**
+   * Deletes the specified media item. (media.delete)
+   *
+   * @param string $name The name of the media item to be deleted.
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MybusinessEmpty
+   */
+  public function delete($name, $optParams = array())
+  {
+    $params = array('name' => $name);
+    $params = array_merge($params, $optParams);
+    return $this->call('delete', array($params), "Google_Service_MyBusiness_MybusinessEmpty");
+  }
+
+  /**
+   * Returns metadata for the requested media item. (media.get)
+   *
+   * @param string $name The name of the requested media item.
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MediaItem
+   */
+  public function get($name, $optParams = array())
+  {
+    $params = array('name' => $name);
+    $params = array_merge($params, $optParams);
+    return $this->call('get', array($params), "Google_Service_MyBusiness_MediaItem");
+  }
+
+  /**
+   * Returns a list of media items associated with a location.
+   * (media.listAccountsLocationsMedia)
+   *
+   * @param string $parent The name of the location whose media items will be
+   * listed.
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param int pageSize How many media items to return per page. The default
+   * value is 100, which is also the maximum supported number of media items able
+   * to be added to a location with the My Business API. Maximum page size is
+   * 2500.
+   * @opt_param string pageToken If specified, returns the next page of media
+   * items.
+   * @return Google_Service_MyBusiness_ListMediaItemsResponse
+   */
+  public function listAccountsLocationsMedia($parent, $optParams = array())
+  {
+    $params = array('parent' => $parent);
+    $params = array_merge($params, $optParams);
+    return $this->call('list', array($params), "Google_Service_MyBusiness_ListMediaItemsResponse");
+  }
+
+  /**
+   * Updates metadata of the specified media item. This can only be used to update
+   * the Category of a media item, with the exception that the new category cannot
+   * be COVER or PROFILE. (media.patch)
+   *
+   * @param string $name The name of the media item to be updated.
+   * @param Google_MediaItem $postBody
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param string updateMask The specific fields to update. If no mask is
+   * specified, then this is treated as a full update and all editable fields are
+   * set to the values passed in.
+   * @return Google_Service_MyBusiness_MediaItem
+   */
+  public function patch($name, Google_Service_MyBusiness_MediaItem $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('patch', array($params), "Google_Service_MyBusiness_MediaItem");
+  }
+
+  /**
+   * Generates a `MediaItemDataRef` for media item uploading. (media.startUpload)
+   *
+   * @param string $parent The resource name of the location this media item is to
+   * be added to.
+   * @param Google_StartUploadMediaItemDataRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MediaItemDataRef
+   */
+  public function startUpload($parent, Google_Service_MyBusiness_StartUploadMediaItemDataRequest $postBody, $optParams = array())
+  {
+    $params = array('parent' => $parent, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('startUpload', array($params), "Google_Service_MyBusiness_MediaItemDataRef");
+  }
+}
+
+/**
+ * The "customers" collection of methods.
+ * Typical usage is:
+ *  <code>
+ *   $mybusinessService = new Google_Service_MyBusiness(...);
+ *   $customers = $mybusinessService->customers;
+ *  </code>
+ */
+class Google_Service_MyBusiness_AccountsLocationsMediaCustomers_Resource extends Google_Service_Resource
+{
+
+  /**
+   * Returns metadata for the requested customer media item. (customers.get)
+   *
+   * @param string $name The resource name of the requested customer media item.
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MediaItem
+   */
+  public function get($name, $optParams = array())
+  {
+    $params = array('name' => $name);
+    $params = array_merge($params, $optParams);
+    return $this->call('get', array($params), "Google_Service_MyBusiness_MediaItem");
+  }
+
+  /**
+   * Returns a list of media items associated with a location that have been
+   * contributed by customers. (customers.listAccountsLocationsMediaCustomers)
+   *
+   * @param string $parent The name of the location whose customer media items
+   * will be listed.
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param int pageSize How many media items to return per page. The default
+   * value is 100, the maximum supported page size is 200.
+   * @opt_param string pageToken If specified, returns the next page of media
+   * items.
+   * @return Google_Service_MyBusiness_ListCustomerMediaItemsResponse
+   */
+  public function listAccountsLocationsMediaCustomers($parent, $optParams = array())
+  {
+    $params = array('parent' => $parent);
+    $params = array_merge($params, $optParams);
+    return $this->call('list', array($params), "Google_Service_MyBusiness_ListCustomerMediaItemsResponse");
+  }
+}
+/**
+ * The "questions" collection of methods.
+ * Typical usage is:
+ *  <code>
+ *   $mybusinessService = new Google_Service_MyBusiness(...);
+ *   $questions = $mybusinessService->questions;
+ *  </code>
+ */
+class Google_Service_MyBusiness_AccountsLocationsQuestions_Resource extends Google_Service_Resource
+{
+
+  /**
+   * Adds a question for the specified location. (questions.create)
+   *
+   * @param string $parent The name of the location to write a question for.
+   * @param Google_Question $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_Question
+   */
+  public function create($parent, Google_Service_MyBusiness_Question $postBody, $optParams = array())
+  {
+    $params = array('parent' => $parent, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('create', array($params), "Google_Service_MyBusiness_Question");
+  }
+
+  /**
+   * Deletes a specific question written by the current user. (questions.delete)
+   *
+   * @param string $name The name of the question to delete.
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MybusinessEmpty
+   */
+  public function delete($name, $optParams = array())
+  {
+    $params = array('name' => $name);
+    $params = array_merge($params, $optParams);
+    return $this->call('delete', array($params), "Google_Service_MyBusiness_MybusinessEmpty");
+  }
+
+  /**
+   * Returns the paginated list of questions and some of its answers for a
+   * specified location. (questions.listAccountsLocationsQuestions)
+   *
+   * @param string $parent The name of the location to fetch questions for.
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param int pageSize How many questions to fetch per page. The default and
+   * maximum `page_size` values are 10.
+   * @opt_param string pageToken If specified, the next page of questions is
+   * retrieved.
+   * @opt_param int answersPerQuestion How many answers to fetch per question. The
+   * default and maximum `answers_per_question` values are 10.
+   * @opt_param string filter A filter constraining the questions to return. The
+   * only filter currently supported is "ignore_answered=true"
+   * @opt_param string orderBy The order to return the questions. Valid options
+   * include 'update_time desc' and 'upvote_count desc', which will return the
+   * questions sorted descendingly by the requested field. The default sort order
+   * is 'update_time desc'.
+   * @return Google_Service_MyBusiness_ListQuestionsResponse
+   */
+  public function listAccountsLocationsQuestions($parent, $optParams = array())
+  {
+    $params = array('parent' => $parent);
+    $params = array_merge($params, $optParams);
+    return $this->call('list', array($params), "Google_Service_MyBusiness_ListQuestionsResponse");
+  }
+
+  /**
+   * Updates a specific question written by the current user. (questions.patch)
+   *
+   * @param string $name The name of the question to update.
+   * @param Google_Question $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_Question
+   */
+  public function patch($name, Google_Service_MyBusiness_Question $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('patch', array($params), "Google_Service_MyBusiness_Question");
+  }
+}
+
+/**
+ * The "answers" collection of methods.
+ * Typical usage is:
+ *  <code>
+ *   $mybusinessService = new Google_Service_MyBusiness(...);
+ *   $answers = $mybusinessService->answers;
+ *  </code>
+ */
+class Google_Service_MyBusiness_AccountsLocationsQuestionsAnswers_Resource extends Google_Service_Resource
+{
+
+  /**
+   * Deletes the answer written by the current user to a question.
+   * (answers.delete)
+   *
+   * @param string $parent The name of the question to delete an answer for.
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MybusinessEmpty
+   */
+  public function delete($parent, $optParams = array())
+  {
+    $params = array('parent' => $parent);
+    $params = array_merge($params, $optParams);
+    return $this->call('delete', array($params), "Google_Service_MyBusiness_MybusinessEmpty");
+  }
+
+  /**
+   * Returns the paginated list of answers for a specified question.
+   * (answers.listAccountsLocationsQuestionsAnswers)
+   *
+   * @param string $parent The name of the question to fetch answers for.
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param int pageSize How many answers to fetch per page. The default and
+   * maximum `page_size` values are 10.
+   * @opt_param string pageToken If specified, the next page of answers is
+   * retrieved.
+   * @opt_param string orderBy The order to return the answers. Valid options
+   * include 'update_time desc' and 'upvote_count desc', which will return the
+   * answers sorted descendingly by the requested field. The default sort order is
+   * 'update_time desc'.
+   * @return Google_Service_MyBusiness_ListAnswersResponse
+   */
+  public function listAccountsLocationsQuestionsAnswers($parent, $optParams = array())
+  {
+    $params = array('parent' => $parent);
+    $params = array_merge($params, $optParams);
+    return $this->call('list', array($params), "Google_Service_MyBusiness_ListAnswersResponse");
+  }
+
+  /**
+   * Creates an answer or updates the existing answer written by the user for the
+   * specified question. A user can only create one answer per question.
+   * (answers.upsert)
+   *
+   * @param string $parent The name of the question to write an answer for.
+   * @param Google_UpsertAnswerRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_Answer
+   */
+  public function upsert($parent, Google_Service_MyBusiness_UpsertAnswerRequest $postBody, $optParams = array())
+  {
+    $params = array('parent' => $parent, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('upsert', array($params), "Google_Service_MyBusiness_Answer");
   }
 }
 /**
@@ -1067,21 +2437,22 @@ class Google_Service_MyBusiness_AccountsLocationsReviews_Resource extends Google
    * operation is only valid if the specified location is verified.
    * (reviews.listAccountsLocationsReviews)
    *
-   * @param string $name The name of the location to fetch reviews for.
+   * @param string $parent The name of the location to fetch reviews for.
    * @param array $optParams Optional parameters.
    *
-   * @opt_param string orderBy Specifies the field to sort reviews by. If
-   * unspecified, the order of reviews returned will default to "update_timedesc".
-   * Valid orders to sort by are `rating` and `ratingdesc` and `update_timedesc`.
-   * @opt_param string pageToken If specified, it fetches the next ‘page’ of
-   * reviews.
    * @opt_param int pageSize How many reviews to fetch per page. The maximum
-   * page_size is 200.
+   * `page_size` is 200.
+   * @opt_param string pageToken If specified, it fetches the next page of
+   * reviews.
+   * @opt_param string orderBy Specifies the field to sort reviews by. If
+   * unspecified, the order of reviews returned will default to `update_time
+   * desc`. Valid orders to sort by are `rating`, `rating desc` and `update_time
+   * desc`.
    * @return Google_Service_MyBusiness_ListReviewsResponse
    */
-  public function listAccountsLocationsReviews($name, $optParams = array())
+  public function listAccountsLocationsReviews($parent, $optParams = array())
   {
-    $params = array('name' => $name);
+    $params = array('parent' => $parent);
     $params = array_merge($params, $optParams);
     return $this->call('list', array($params), "Google_Service_MyBusiness_ListReviewsResponse");
   }
@@ -1089,18 +2460,68 @@ class Google_Service_MyBusiness_AccountsLocationsReviews_Resource extends Google
   /**
    * Updates the reply to the specified review. A reply is created if one does not
    * exist. This operation is only valid if the specified location is verified.
-   * (reviews.reply)
+   * (reviews.updateReply)
    *
    * @param string $name The name of the review to respond to.
    * @param Google_ReviewReply $postBody
    * @param array $optParams Optional parameters.
    * @return Google_Service_MyBusiness_ReviewReply
    */
-  public function reply($name, Google_Service_MyBusiness_ReviewReply $postBody, $optParams = array())
+  public function updateReply($name, Google_Service_MyBusiness_ReviewReply $postBody, $optParams = array())
   {
     $params = array('name' => $name, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
-    return $this->call('reply', array($params), "Google_Service_MyBusiness_ReviewReply");
+    return $this->call('updateReply', array($params), "Google_Service_MyBusiness_ReviewReply");
+  }
+}
+/**
+ * The "verifications" collection of methods.
+ * Typical usage is:
+ *  <code>
+ *   $mybusinessService = new Google_Service_MyBusiness(...);
+ *   $verifications = $mybusinessService->verifications;
+ *  </code>
+ */
+class Google_Service_MyBusiness_AccountsLocationsVerifications_Resource extends Google_Service_Resource
+{
+
+  /**
+   * Completes a `PENDING` verification.
+   *
+   * It is only necessary for non `AUTO` verification methods. `AUTO` verification
+   * request is instantly `VERIFIED` upon creation. (verifications.complete)
+   *
+   * @param string $name Resource name of the verification to complete.
+   * @param Google_CompleteVerificationRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_CompleteVerificationResponse
+   */
+  public function complete($name, Google_Service_MyBusiness_CompleteVerificationRequest $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('complete', array($params), "Google_Service_MyBusiness_CompleteVerificationResponse");
+  }
+
+  /**
+   * List verifications of a location, ordered by create time.
+   * (verifications.listAccountsLocationsVerifications)
+   *
+   * @param string $parent Resource name of the location that verification
+   * requests belong to.
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param int pageSize How many verification to include per page. If not
+   * set, return all.
+   * @opt_param string pageToken If specified, returns the next page of
+   * verifications.
+   * @return Google_Service_MyBusiness_ListVerificationsResponse
+   */
+  public function listAccountsLocationsVerifications($parent, $optParams = array())
+  {
+    $params = array('parent' => $parent);
+    $params = array_merge($params, $optParams);
+    return $this->call('list', array($params), "Google_Service_MyBusiness_ListVerificationsResponse");
   }
 }
 
@@ -1122,27 +2543,27 @@ class Google_Service_MyBusiness_Attributes_Resource extends Google_Service_Resou
    *
    * @param array $optParams Optional parameters.
    *
+   * @opt_param string name Resource name of the location to look up available
+   * attributes.
+   * @opt_param string categoryId The primary category stable ID to find available
+   * attributes.
+   * @opt_param string country The ISO 3166-1 alpha-2 country code to find
+   * available attributes.
    * @opt_param string languageCode The BCP 47 code of language to get attribute
    * display names in. If this language is not available, they will be provided in
    * English.
-   * @opt_param string name Resource name of the location to lookup available
-   * attributes.
    * @opt_param int pageSize How many attributes to include per page. Default is
    * 200, minimum is 1.
-   * @opt_param string country The ISO 3166-1 alpha-2 country code to find
-   * available attributes.
    * @opt_param string pageToken If specified, the next page of attribute metadata
    * is retrieved. The `pageToken` is returned when a call to `attributes.list`
    * returns more results than can fit into the requested page size.
-   * @opt_param string categoryId The primary category stable ID to find available
-   * attributes.
-   * @return Google_Service_MyBusiness_ListLocationAttributeMetadataResponse
+   * @return Google_Service_MyBusiness_ListAttributeMetadataResponse
    */
   public function listAttributes($optParams = array())
   {
     $params = array();
     $params = array_merge($params, $optParams);
-    return $this->call('list', array($params), "Google_Service_MyBusiness_ListLocationAttributeMetadataResponse");
+    return $this->call('list', array($params), "Google_Service_MyBusiness_ListAttributeMetadataResponse");
   }
 }
 
@@ -1158,23 +2579,48 @@ class Google_Service_MyBusiness_Categories_Resource extends Google_Service_Resou
 {
 
   /**
+   * Returns a list of business categories for the provided language and GConcept
+   * ids. (categories.batchGet)
+   *
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param string languageCode Required. The BCP 47 code of language that the
+   * category names should be returned in.
+   * @opt_param string categoryIds Required. At least one name must be set. The
+   * GConcept ids the localized category names should be returned for.
+   * @opt_param string regionCode Optional. The ISO 3166-1 alpha-2 country code
+   * used to infer non-standard language.
+   * @opt_param string view Required. Specifies which parts to the Category
+   * resource should be returned in the response.
+   * @return Google_Service_MyBusiness_BatchGetBusinessCategoriesResponse
+   */
+  public function batchGet($optParams = array())
+  {
+    $params = array();
+    $params = array_merge($params, $optParams);
+    return $this->call('batchGet', array($params), "Google_Service_MyBusiness_BatchGetBusinessCategoriesResponse");
+  }
+
+  /**
    * Returns a list of business categories. Search will match the category name
    * but not the category ID.
    *
-   * Note: Currently search only matches the front of a category name (that is,
-   * 'food' may return 'Food Court' but not 'Fast Food Restaurant').
+   * Note: Search only matches the front of a category name (that is, 'food' may
+   * return 'Food Court' but not 'Fast Food Restaurant').
    * (categories.listCategories)
    *
    * @param array $optParams Optional parameters.
    *
-   * @opt_param string searchTerm Optional filter string from user.
    * @opt_param string regionCode The ISO 3166-1 alpha-2 country code.
-   * @opt_param string pageToken If specified, the next page of categories will be
-   * fetched.
-   * @opt_param int pageSize How many categories to fetch per page. Default is
-   * 100, minimum is 1, and maximum page size is 100.
    * @opt_param string languageCode The BCP 47 code of language. If the language
    * is not available, it will default to English.
+   * @opt_param string searchTerm Optional filter string from user.
+   * @opt_param int pageSize How many categories to fetch per page. Default is
+   * 100, minimum is 1, and maximum page size is 100.
+   * @opt_param string pageToken If specified, the next page of categories will be
+   * fetched.
+   * @opt_param string view Optional. Specifies which parts to the Category
+   * resource should be returned in the response.
    * @return Google_Service_MyBusiness_ListBusinessCategoriesResponse
    */
   public function listCategories($optParams = array())
@@ -1185,15 +2631,113 @@ class Google_Service_MyBusiness_Categories_Resource extends Google_Service_Resou
   }
 }
 
+/**
+ * The "chains" collection of methods.
+ * Typical usage is:
+ *  <code>
+ *   $mybusinessService = new Google_Service_MyBusiness(...);
+ *   $chains = $mybusinessService->chains;
+ *  </code>
+ */
+class Google_Service_MyBusiness_Chains_Resource extends Google_Service_Resource
+{
+
+  /**
+   * Gets the specified chain. Returns `NOT_FOUND` if the chain does not exist.
+   * (chains.get)
+   *
+   * @param string $name The chain's resource name, in the format
+   * `chains/{chain_place_id}`.
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_Chain
+   */
+  public function get($name, $optParams = array())
+  {
+    $params = array('name' => $name);
+    $params = array_merge($params, $optParams);
+    return $this->call('get', array($params), "Google_Service_MyBusiness_Chain");
+  }
+
+  /**
+   * Searches the chain based on chain name. (chains.search)
+   *
+   * @param array $optParams Optional parameters.
+   *
+   * @opt_param string chainDisplayName Search for a chain by its name.
+   * Exact/partial/fuzzy/related queries are supported. Examples: "walmart", "wal-
+   * mart", "walmmmart", "沃尔玛"
+   * @opt_param int resultCount The maximum number of matched chains to return
+   * from this query. The default is 10. The maximum possible value is 500.
+   * @return Google_Service_MyBusiness_SearchChainsResponse
+   */
+  public function search($optParams = array())
+  {
+    $params = array();
+    $params = array_merge($params, $optParams);
+    return $this->call('search', array($params), "Google_Service_MyBusiness_SearchChainsResponse");
+  }
+}
+
+/**
+ * The "googleLocations" collection of methods.
+ * Typical usage is:
+ *  <code>
+ *   $mybusinessService = new Google_Service_MyBusiness(...);
+ *   $googleLocations = $mybusinessService->googleLocations;
+ *  </code>
+ */
+class Google_Service_MyBusiness_GoogleLocations_Resource extends Google_Service_Resource
+{
+
+  /**
+   * Report a GoogleLocation. (googleLocations.report)
+   *
+   * @param string $name Resource name of a [GoogleLocation], in the format
+   * `googleLocations/{googleLocationId}`.
+   * @param Google_ReportGoogleLocationRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_MybusinessEmpty
+   */
+  public function report($name, Google_Service_MyBusiness_ReportGoogleLocationRequest $postBody, $optParams = array())
+  {
+    $params = array('name' => $name, 'postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('report', array($params), "Google_Service_MyBusiness_MybusinessEmpty");
+  }
+
+  /**
+   * Search all of the possible locations that are a match to the specified
+   * request. (googleLocations.search)
+   *
+   * @param Google_SearchGoogleLocationsRequest $postBody
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_MyBusiness_SearchGoogleLocationsResponse
+   */
+  public function search(Google_Service_MyBusiness_SearchGoogleLocationsRequest $postBody, $optParams = array())
+  {
+    $params = array('postBody' => $postBody);
+    $params = array_merge($params, $optParams);
+    return $this->call('search', array($params), "Google_Service_MyBusiness_SearchGoogleLocationsResponse");
+  }
+}
 
 
+
+
+class Google_Service_MyBusiness_AcceptInvitationRequest extends Google_Model
+{
+}
 
 class Google_Service_MyBusiness_Account extends Google_Model
 {
   protected $internal_gapi_mappings = array(
   );
   public $accountName;
+  public $accountNumber;
   public $name;
+  protected $organizationInfoType = 'Google_Service_MyBusiness_OrganizationInfo';
+  protected $organizationInfoDataType = '';
+  public $permissionLevel;
   public $role;
   protected $stateType = 'Google_Service_MyBusiness_AccountState';
   protected $stateDataType = '';
@@ -1208,6 +2752,14 @@ class Google_Service_MyBusiness_Account extends Google_Model
   {
     return $this->accountName;
   }
+  public function setAccountNumber($accountNumber)
+  {
+    $this->accountNumber = $accountNumber;
+  }
+  public function getAccountNumber()
+  {
+    return $this->accountNumber;
+  }
   public function setName($name)
   {
     $this->name = $name;
@@ -1215,6 +2767,22 @@ class Google_Service_MyBusiness_Account extends Google_Model
   public function getName()
   {
     return $this->name;
+  }
+  public function setOrganizationInfo(Google_Service_MyBusiness_OrganizationInfo $organizationInfo)
+  {
+    $this->organizationInfo = $organizationInfo;
+  }
+  public function getOrganizationInfo()
+  {
+    return $this->organizationInfo;
+  }
+  public function setPermissionLevel($permissionLevel)
+  {
+    $this->permissionLevel = $permissionLevel;
+  }
+  public function getPermissionLevel()
+  {
+    return $this->permissionLevel;
   }
   public function setRole($role)
   {
@@ -1276,66 +2844,47 @@ class Google_Service_MyBusiness_AdWordsLocationExtensions extends Google_Model
   }
 }
 
-class Google_Service_MyBusiness_Address extends Google_Collection
+class Google_Service_MyBusiness_AddressInput extends Google_Model
 {
-  protected $collection_key = 'addressLines';
   protected $internal_gapi_mappings = array(
   );
-  public $addressLines;
-  public $administrativeArea;
-  public $country;
-  public $locality;
-  public $postalCode;
-  public $subLocality;
+  public $mailerContactName;
 
 
-  public function setAddressLines($addressLines)
+  public function setMailerContactName($mailerContactName)
   {
-    $this->addressLines = $addressLines;
+    $this->mailerContactName = $mailerContactName;
   }
-  public function getAddressLines()
+  public function getMailerContactName()
   {
-    return $this->addressLines;
+    return $this->mailerContactName;
   }
-  public function setAdministrativeArea($administrativeArea)
+}
+
+class Google_Service_MyBusiness_AddressVerificationData extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $addressType = 'Google_Service_MyBusiness_PostalAddress';
+  protected $addressDataType = '';
+  public $businessName;
+
+
+  public function setAddress(Google_Service_MyBusiness_PostalAddress $address)
   {
-    $this->administrativeArea = $administrativeArea;
+    $this->address = $address;
   }
-  public function getAdministrativeArea()
+  public function getAddress()
   {
-    return $this->administrativeArea;
+    return $this->address;
   }
-  public function setCountry($country)
+  public function setBusinessName($businessName)
   {
-    $this->country = $country;
+    $this->businessName = $businessName;
   }
-  public function getCountry()
+  public function getBusinessName()
   {
-    return $this->country;
-  }
-  public function setLocality($locality)
-  {
-    $this->locality = $locality;
-  }
-  public function getLocality()
-  {
-    return $this->locality;
-  }
-  public function setPostalCode($postalCode)
-  {
-    $this->postalCode = $postalCode;
-  }
-  public function getPostalCode()
-  {
-    return $this->postalCode;
-  }
-  public function setSubLocality($subLocality)
-  {
-    $this->subLocality = $subLocality;
-  }
-  public function getSubLocality()
-  {
-    return $this->subLocality;
+    return $this->businessName;
   }
 }
 
@@ -1380,6 +2929,69 @@ class Google_Service_MyBusiness_Admin extends Google_Model
   public function getRole()
   {
     return $this->role;
+  }
+}
+
+class Google_Service_MyBusiness_Answer extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $authorType = 'Google_Service_MyBusiness_Author';
+  protected $authorDataType = '';
+  public $createTime;
+  public $name;
+  public $text;
+  public $updateTime;
+  public $upvoteCount;
+
+
+  public function setAuthor(Google_Service_MyBusiness_Author $author)
+  {
+    $this->author = $author;
+  }
+  public function getAuthor()
+  {
+    return $this->author;
+  }
+  public function setCreateTime($createTime)
+  {
+    $this->createTime = $createTime;
+  }
+  public function getCreateTime()
+  {
+    return $this->createTime;
+  }
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+  public function setText($text)
+  {
+    $this->text = $text;
+  }
+  public function getText()
+  {
+    return $this->text;
+  }
+  public function setUpdateTime($updateTime)
+  {
+    $this->updateTime = $updateTime;
+  }
+  public function getUpdateTime()
+  {
+    return $this->updateTime;
+  }
+  public function setUpvoteCount($upvoteCount)
+  {
+    $this->upvoteCount = $upvoteCount;
+  }
+  public function getUpvoteCount()
+  {
+    return $this->upvoteCount;
   }
 }
 
@@ -1555,6 +3167,85 @@ class Google_Service_MyBusiness_AttributeValueMetadata extends Google_Model
   }
 }
 
+class Google_Service_MyBusiness_Attribution extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $profileName;
+  public $profilePhotoUrl;
+  public $profileUrl;
+  public $takedownUrl;
+
+
+  public function setProfileName($profileName)
+  {
+    $this->profileName = $profileName;
+  }
+  public function getProfileName()
+  {
+    return $this->profileName;
+  }
+  public function setProfilePhotoUrl($profilePhotoUrl)
+  {
+    $this->profilePhotoUrl = $profilePhotoUrl;
+  }
+  public function getProfilePhotoUrl()
+  {
+    return $this->profilePhotoUrl;
+  }
+  public function setProfileUrl($profileUrl)
+  {
+    $this->profileUrl = $profileUrl;
+  }
+  public function getProfileUrl()
+  {
+    return $this->profileUrl;
+  }
+  public function setTakedownUrl($takedownUrl)
+  {
+    $this->takedownUrl = $takedownUrl;
+  }
+  public function getTakedownUrl()
+  {
+    return $this->takedownUrl;
+  }
+}
+
+class Google_Service_MyBusiness_Author extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $displayName;
+  public $profilePhotoUrl;
+  public $type;
+
+
+  public function setDisplayName($displayName)
+  {
+    $this->displayName = $displayName;
+  }
+  public function getDisplayName()
+  {
+    return $this->displayName;
+  }
+  public function setProfilePhotoUrl($profilePhotoUrl)
+  {
+    $this->profilePhotoUrl = $profilePhotoUrl;
+  }
+  public function getProfilePhotoUrl()
+  {
+    return $this->profilePhotoUrl;
+  }
+  public function setType($type)
+  {
+    $this->type = $type;
+  }
+  public function getType()
+  {
+    return $this->type;
+  }
+}
+
 class Google_Service_MyBusiness_BasicMetricsRequest extends Google_Collection
 {
   protected $collection_key = 'metricRequests';
@@ -1581,6 +3272,25 @@ class Google_Service_MyBusiness_BasicMetricsRequest extends Google_Collection
   public function getTimeRange()
   {
     return $this->timeRange;
+  }
+}
+
+class Google_Service_MyBusiness_BatchGetBusinessCategoriesResponse extends Google_Collection
+{
+  protected $collection_key = 'categories';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $categoriesType = 'Google_Service_MyBusiness_Category';
+  protected $categoriesDataType = 'array';
+
+
+  public function setCategories($categories)
+  {
+    $this->categories = $categories;
+  }
+  public function getCategories()
+  {
+    return $this->categories;
   }
 }
 
@@ -1621,6 +3331,88 @@ class Google_Service_MyBusiness_BatchGetLocationsResponse extends Google_Collect
   }
 }
 
+class Google_Service_MyBusiness_BatchGetReviewsRequest extends Google_Collection
+{
+  protected $collection_key = 'locationNames';
+  protected $internal_gapi_mappings = array(
+  );
+  public $ignoreRatingOnlyReviews;
+  public $locationNames;
+  public $orderBy;
+  public $pageSize;
+  public $pageToken;
+
+
+  public function setIgnoreRatingOnlyReviews($ignoreRatingOnlyReviews)
+  {
+    $this->ignoreRatingOnlyReviews = $ignoreRatingOnlyReviews;
+  }
+  public function getIgnoreRatingOnlyReviews()
+  {
+    return $this->ignoreRatingOnlyReviews;
+  }
+  public function setLocationNames($locationNames)
+  {
+    $this->locationNames = $locationNames;
+  }
+  public function getLocationNames()
+  {
+    return $this->locationNames;
+  }
+  public function setOrderBy($orderBy)
+  {
+    $this->orderBy = $orderBy;
+  }
+  public function getOrderBy()
+  {
+    return $this->orderBy;
+  }
+  public function setPageSize($pageSize)
+  {
+    $this->pageSize = $pageSize;
+  }
+  public function getPageSize()
+  {
+    return $this->pageSize;
+  }
+  public function setPageToken($pageToken)
+  {
+    $this->pageToken = $pageToken;
+  }
+  public function getPageToken()
+  {
+    return $this->pageToken;
+  }
+}
+
+class Google_Service_MyBusiness_BatchGetReviewsResponse extends Google_Collection
+{
+  protected $collection_key = 'locationReviews';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $locationReviewsType = 'Google_Service_MyBusiness_LocationReview';
+  protected $locationReviewsDataType = 'array';
+  public $nextPageToken;
+
+
+  public function setLocationReviews($locationReviews)
+  {
+    $this->locationReviews = $locationReviews;
+  }
+  public function getLocationReviews()
+  {
+    return $this->locationReviews;
+  }
+  public function setNextPageToken($nextPageToken)
+  {
+    $this->nextPageToken = $nextPageToken;
+  }
+  public function getNextPageToken()
+  {
+    return $this->nextPageToken;
+  }
+}
+
 class Google_Service_MyBusiness_BusinessHours extends Google_Collection
 {
   protected $collection_key = 'periods';
@@ -1640,12 +3432,38 @@ class Google_Service_MyBusiness_BusinessHours extends Google_Collection
   }
 }
 
+class Google_Service_MyBusiness_CallToAction extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $actionType;
+  public $url;
+
+
+  public function setActionType($actionType)
+  {
+    $this->actionType = $actionType;
+  }
+  public function getActionType()
+  {
+    return $this->actionType;
+  }
+  public function setUrl($url)
+  {
+    $this->url = $url;
+  }
+  public function getUrl()
+  {
+    return $this->url;
+  }
+}
+
 class Google_Service_MyBusiness_Category extends Google_Model
 {
   protected $internal_gapi_mappings = array(
   );
   public $categoryId;
-  public $name;
+  public $displayName;
 
 
   public function setCategoryId($categoryId)
@@ -1656,6 +3474,45 @@ class Google_Service_MyBusiness_Category extends Google_Model
   {
     return $this->categoryId;
   }
+  public function setDisplayName($displayName)
+  {
+    $this->displayName = $displayName;
+  }
+  public function getDisplayName()
+  {
+    return $this->displayName;
+  }
+}
+
+class Google_Service_MyBusiness_Chain extends Google_Collection
+{
+  protected $collection_key = 'websites';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $chainNamesType = 'Google_Service_MyBusiness_ChainName';
+  protected $chainNamesDataType = 'array';
+  public $locationCount;
+  public $name;
+  protected $websitesType = 'Google_Service_MyBusiness_ChainUrl';
+  protected $websitesDataType = 'array';
+
+
+  public function setChainNames($chainNames)
+  {
+    $this->chainNames = $chainNames;
+  }
+  public function getChainNames()
+  {
+    return $this->chainNames;
+  }
+  public function setLocationCount($locationCount)
+  {
+    $this->locationCount = $locationCount;
+  }
+  public function getLocationCount()
+  {
+    return $this->locationCount;
+  }
   public function setName($name)
   {
     $this->name = $name;
@@ -1664,10 +3521,96 @@ class Google_Service_MyBusiness_Category extends Google_Model
   {
     return $this->name;
   }
+  public function setWebsites($websites)
+  {
+    $this->websites = $websites;
+  }
+  public function getWebsites()
+  {
+    return $this->websites;
+  }
+}
+
+class Google_Service_MyBusiness_ChainName extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $displayName;
+  public $languageCode;
+
+
+  public function setDisplayName($displayName)
+  {
+    $this->displayName = $displayName;
+  }
+  public function getDisplayName()
+  {
+    return $this->displayName;
+  }
+  public function setLanguageCode($languageCode)
+  {
+    $this->languageCode = $languageCode;
+  }
+  public function getLanguageCode()
+  {
+    return $this->languageCode;
+  }
+}
+
+class Google_Service_MyBusiness_ChainUrl extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $url;
+
+
+  public function setUrl($url)
+  {
+    $this->url = $url;
+  }
+  public function getUrl()
+  {
+    return $this->url;
+  }
 }
 
 class Google_Service_MyBusiness_ClearLocationAssociationRequest extends Google_Model
 {
+}
+
+class Google_Service_MyBusiness_CompleteVerificationRequest extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $pin;
+
+
+  public function setPin($pin)
+  {
+    $this->pin = $pin;
+  }
+  public function getPin()
+  {
+    return $this->pin;
+  }
+}
+
+class Google_Service_MyBusiness_CompleteVerificationResponse extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $verificationType = 'Google_Service_MyBusiness_Verification';
+  protected $verificationDataType = '';
+
+
+  public function setVerification(Google_Service_MyBusiness_Verification $verification)
+  {
+    $this->verification = $verification;
+  }
+  public function getVerification()
+  {
+    return $this->verification;
+  }
 }
 
 class Google_Service_MyBusiness_Date extends Google_Model
@@ -1703,6 +3646,10 @@ class Google_Service_MyBusiness_Date extends Google_Model
   {
     return $this->year;
   }
+}
+
+class Google_Service_MyBusiness_DeclineInvitationRequest extends Google_Model
+{
 }
 
 class Google_Service_MyBusiness_DimensionalMetricValue extends Google_Model
@@ -1741,6 +3688,32 @@ class Google_Service_MyBusiness_DimensionalMetricValue extends Google_Model
   }
 }
 
+class Google_Service_MyBusiness_Dimensions extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $heightPixels;
+  public $widthPixels;
+
+
+  public function setHeightPixels($heightPixels)
+  {
+    $this->heightPixels = $heightPixels;
+  }
+  public function getHeightPixels()
+  {
+    return $this->heightPixels;
+  }
+  public function setWidthPixels($widthPixels)
+  {
+    $this->widthPixels = $widthPixels;
+  }
+  public function getWidthPixels()
+  {
+    return $this->widthPixels;
+  }
+}
+
 class Google_Service_MyBusiness_DrivingDirectionMetricsRequest extends Google_Model
 {
   protected $internal_gapi_mappings = array(
@@ -1773,7 +3746,6 @@ class Google_Service_MyBusiness_Duplicate extends Google_Model
   );
   public $access;
   public $locationName;
-  public $ownership;
   public $placeId;
 
 
@@ -1793,14 +3765,6 @@ class Google_Service_MyBusiness_Duplicate extends Google_Model
   {
     return $this->locationName;
   }
-  public function setOwnership($ownership)
-  {
-    $this->ownership = $ownership;
-  }
-  public function getOwnership()
-  {
-    return $this->ownership;
-  }
   public function setPlaceId($placeId)
   {
     $this->placeId = $placeId;
@@ -1808,6 +3772,104 @@ class Google_Service_MyBusiness_Duplicate extends Google_Model
   public function getPlaceId()
   {
     return $this->placeId;
+  }
+}
+
+class Google_Service_MyBusiness_EmailInput extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $emailAddress;
+
+
+  public function setEmailAddress($emailAddress)
+  {
+    $this->emailAddress = $emailAddress;
+  }
+  public function getEmailAddress()
+  {
+    return $this->emailAddress;
+  }
+}
+
+class Google_Service_MyBusiness_EmailVerificationData extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $domainName;
+  public $isUserNameEditable;
+  public $userName;
+
+
+  public function setDomainName($domainName)
+  {
+    $this->domainName = $domainName;
+  }
+  public function getDomainName()
+  {
+    return $this->domainName;
+  }
+  public function setIsUserNameEditable($isUserNameEditable)
+  {
+    $this->isUserNameEditable = $isUserNameEditable;
+  }
+  public function getIsUserNameEditable()
+  {
+    return $this->isUserNameEditable;
+  }
+  public function setUserName($userName)
+  {
+    $this->userName = $userName;
+  }
+  public function getUserName()
+  {
+    return $this->userName;
+  }
+}
+
+class Google_Service_MyBusiness_FetchVerificationOptionsRequest extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $contextType = 'Google_Service_MyBusiness_ServiceBusinessContext';
+  protected $contextDataType = '';
+  public $languageCode;
+
+
+  public function setContext(Google_Service_MyBusiness_ServiceBusinessContext $context)
+  {
+    $this->context = $context;
+  }
+  public function getContext()
+  {
+    return $this->context;
+  }
+  public function setLanguageCode($languageCode)
+  {
+    $this->languageCode = $languageCode;
+  }
+  public function getLanguageCode()
+  {
+    return $this->languageCode;
+  }
+}
+
+class Google_Service_MyBusiness_FetchVerificationOptionsResponse extends Google_Collection
+{
+  protected $collection_key = 'options';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $optionsType = 'Google_Service_MyBusiness_VerificationOption';
+  protected $optionsDataType = 'array';
+
+
+  public function setOptions($options)
+  {
+    $this->options = $options;
+  }
+  public function getOptions()
+  {
+    return $this->options;
   }
 }
 
@@ -1874,6 +3936,99 @@ class Google_Service_MyBusiness_FindMatchingLocationsResponse extends Google_Col
   }
 }
 
+class Google_Service_MyBusiness_FollowersMetadata extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $count;
+  public $name;
+
+
+  public function setCount($count)
+  {
+    $this->count = $count;
+  }
+  public function getCount()
+  {
+    return $this->count;
+  }
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+}
+
+class Google_Service_MyBusiness_FreeFormServiceItem extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $categoryId;
+  protected $labelType = 'Google_Service_MyBusiness_Label';
+  protected $labelDataType = '';
+
+
+  public function setCategoryId($categoryId)
+  {
+    $this->categoryId = $categoryId;
+  }
+  public function getCategoryId()
+  {
+    return $this->categoryId;
+  }
+  public function setLabel(Google_Service_MyBusiness_Label $label)
+  {
+    $this->label = $label;
+  }
+  public function getLabel()
+  {
+    return $this->label;
+  }
+}
+
+class Google_Service_MyBusiness_GenerateAccountNumberRequest extends Google_Model
+{
+}
+
+class Google_Service_MyBusiness_GoogleLocation extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $locationType = 'Google_Service_MyBusiness_Location';
+  protected $locationDataType = '';
+  public $name;
+  public $requestAdminRightsUrl;
+
+
+  public function setLocation(Google_Service_MyBusiness_Location $location)
+  {
+    $this->location = $location;
+  }
+  public function getLocation()
+  {
+    return $this->location;
+  }
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+  public function setRequestAdminRightsUrl($requestAdminRightsUrl)
+  {
+    $this->requestAdminRightsUrl = $requestAdminRightsUrl;
+  }
+  public function getRequestAdminRightsUrl()
+  {
+    return $this->requestAdminRightsUrl;
+  }
+}
+
 class Google_Service_MyBusiness_GoogleUpdatedLocation extends Google_Model
 {
   protected $internal_gapi_mappings = array(
@@ -1898,6 +4053,125 @@ class Google_Service_MyBusiness_GoogleUpdatedLocation extends Google_Model
   public function getLocation()
   {
     return $this->location;
+  }
+}
+
+class Google_Service_MyBusiness_Invitation extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $name;
+  public $role;
+  protected $targetAccountType = 'Google_Service_MyBusiness_Account';
+  protected $targetAccountDataType = '';
+  protected $targetLocationType = 'Google_Service_MyBusiness_TargetLocation';
+  protected $targetLocationDataType = '';
+
+
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+  public function setRole($role)
+  {
+    $this->role = $role;
+  }
+  public function getRole()
+  {
+    return $this->role;
+  }
+  public function setTargetAccount(Google_Service_MyBusiness_Account $targetAccount)
+  {
+    $this->targetAccount = $targetAccount;
+  }
+  public function getTargetAccount()
+  {
+    return $this->targetAccount;
+  }
+  public function setTargetLocation(Google_Service_MyBusiness_TargetLocation $targetLocation)
+  {
+    $this->targetLocation = $targetLocation;
+  }
+  public function getTargetLocation()
+  {
+    return $this->targetLocation;
+  }
+}
+
+class Google_Service_MyBusiness_Item extends Google_Collection
+{
+  protected $collection_key = 'labels';
+  protected $internal_gapi_mappings = array(
+  );
+  public $itemId;
+  protected $labelsType = 'Google_Service_MyBusiness_Label';
+  protected $labelsDataType = 'array';
+  protected $priceType = 'Google_Service_MyBusiness_Money';
+  protected $priceDataType = '';
+
+
+  public function setItemId($itemId)
+  {
+    $this->itemId = $itemId;
+  }
+  public function getItemId()
+  {
+    return $this->itemId;
+  }
+  public function setLabels($labels)
+  {
+    $this->labels = $labels;
+  }
+  public function getLabels()
+  {
+    return $this->labels;
+  }
+  public function setPrice(Google_Service_MyBusiness_Money $price)
+  {
+    $this->price = $price;
+  }
+  public function getPrice()
+  {
+    return $this->price;
+  }
+}
+
+class Google_Service_MyBusiness_Label extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $description;
+  public $displayName;
+  public $languageCode;
+
+
+  public function setDescription($description)
+  {
+    $this->description = $description;
+  }
+  public function getDescription()
+  {
+    return $this->description;
+  }
+  public function setDisplayName($displayName)
+  {
+    $this->displayName = $displayName;
+  }
+  public function getDisplayName()
+  {
+    return $this->displayName;
+  }
+  public function setLanguageCode($languageCode)
+  {
+    $this->languageCode = $languageCode;
+  }
+  public function getLanguageCode()
+  {
+    return $this->languageCode;
   }
 }
 
@@ -1974,6 +4248,71 @@ class Google_Service_MyBusiness_ListAccountsResponse extends Google_Collection
   }
 }
 
+class Google_Service_MyBusiness_ListAnswersResponse extends Google_Collection
+{
+  protected $collection_key = 'answers';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $answersType = 'Google_Service_MyBusiness_Answer';
+  protected $answersDataType = 'array';
+  public $nextPageToken;
+  public $totalSize;
+
+
+  public function setAnswers($answers)
+  {
+    $this->answers = $answers;
+  }
+  public function getAnswers()
+  {
+    return $this->answers;
+  }
+  public function setNextPageToken($nextPageToken)
+  {
+    $this->nextPageToken = $nextPageToken;
+  }
+  public function getNextPageToken()
+  {
+    return $this->nextPageToken;
+  }
+  public function setTotalSize($totalSize)
+  {
+    $this->totalSize = $totalSize;
+  }
+  public function getTotalSize()
+  {
+    return $this->totalSize;
+  }
+}
+
+class Google_Service_MyBusiness_ListAttributeMetadataResponse extends Google_Collection
+{
+  protected $collection_key = 'attributes';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $attributesType = 'Google_Service_MyBusiness_AttributeMetadata';
+  protected $attributesDataType = 'array';
+  public $nextPageToken;
+
+
+  public function setAttributes($attributes)
+  {
+    $this->attributes = $attributes;
+  }
+  public function getAttributes()
+  {
+    return $this->attributes;
+  }
+  public function setNextPageToken($nextPageToken)
+  {
+    $this->nextPageToken = $nextPageToken;
+  }
+  public function getNextPageToken()
+  {
+    return $this->nextPageToken;
+  }
+}
+
 class Google_Service_MyBusiness_ListBusinessCategoriesResponse extends Google_Collection
 {
   protected $collection_key = 'categories';
@@ -2011,6 +4350,90 @@ class Google_Service_MyBusiness_ListBusinessCategoriesResponse extends Google_Co
   }
 }
 
+class Google_Service_MyBusiness_ListCustomerMediaItemsResponse extends Google_Collection
+{
+  protected $collection_key = 'mediaItems';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $mediaItemsType = 'Google_Service_MyBusiness_MediaItem';
+  protected $mediaItemsDataType = 'array';
+  public $nextPageToken;
+  public $totalMediaItemCount;
+
+
+  public function setMediaItems($mediaItems)
+  {
+    $this->mediaItems = $mediaItems;
+  }
+  public function getMediaItems()
+  {
+    return $this->mediaItems;
+  }
+  public function setNextPageToken($nextPageToken)
+  {
+    $this->nextPageToken = $nextPageToken;
+  }
+  public function getNextPageToken()
+  {
+    return $this->nextPageToken;
+  }
+  public function setTotalMediaItemCount($totalMediaItemCount)
+  {
+    $this->totalMediaItemCount = $totalMediaItemCount;
+  }
+  public function getTotalMediaItemCount()
+  {
+    return $this->totalMediaItemCount;
+  }
+}
+
+class Google_Service_MyBusiness_ListInvitationsResponse extends Google_Collection
+{
+  protected $collection_key = 'invitations';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $invitationsType = 'Google_Service_MyBusiness_Invitation';
+  protected $invitationsDataType = 'array';
+
+
+  public function setInvitations($invitations)
+  {
+    $this->invitations = $invitations;
+  }
+  public function getInvitations()
+  {
+    return $this->invitations;
+  }
+}
+
+class Google_Service_MyBusiness_ListLocalPostsResponse extends Google_Collection
+{
+  protected $collection_key = 'localPosts';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $localPostsType = 'Google_Service_MyBusiness_LocalPost';
+  protected $localPostsDataType = 'array';
+  public $nextPageToken;
+
+
+  public function setLocalPosts($localPosts)
+  {
+    $this->localPosts = $localPosts;
+  }
+  public function getLocalPosts()
+  {
+    return $this->localPosts;
+  }
+  public function setNextPageToken($nextPageToken)
+  {
+    $this->nextPageToken = $nextPageToken;
+  }
+  public function getNextPageToken()
+  {
+    return $this->nextPageToken;
+  }
+}
+
 class Google_Service_MyBusiness_ListLocationAdminsResponse extends Google_Collection
 {
   protected $collection_key = 'admins';
@@ -2030,34 +4453,6 @@ class Google_Service_MyBusiness_ListLocationAdminsResponse extends Google_Collec
   }
 }
 
-class Google_Service_MyBusiness_ListLocationAttributeMetadataResponse extends Google_Collection
-{
-  protected $collection_key = 'attributes';
-  protected $internal_gapi_mappings = array(
-  );
-  protected $attributesType = 'Google_Service_MyBusiness_AttributeMetadata';
-  protected $attributesDataType = 'array';
-  public $nextPageToken;
-
-
-  public function setAttributes($attributes)
-  {
-    $this->attributes = $attributes;
-  }
-  public function getAttributes()
-  {
-    return $this->attributes;
-  }
-  public function setNextPageToken($nextPageToken)
-  {
-    $this->nextPageToken = $nextPageToken;
-  }
-  public function getNextPageToken()
-  {
-    return $this->nextPageToken;
-  }
-}
-
 class Google_Service_MyBusiness_ListLocationsResponse extends Google_Collection
 {
   protected $collection_key = 'locations';
@@ -2066,6 +4461,7 @@ class Google_Service_MyBusiness_ListLocationsResponse extends Google_Collection
   protected $locationsType = 'Google_Service_MyBusiness_Location';
   protected $locationsDataType = 'array';
   public $nextPageToken;
+  public $totalSize;
 
 
   public function setLocations($locations)
@@ -2083,6 +4479,125 @@ class Google_Service_MyBusiness_ListLocationsResponse extends Google_Collection
   public function getNextPageToken()
   {
     return $this->nextPageToken;
+  }
+  public function setTotalSize($totalSize)
+  {
+    $this->totalSize = $totalSize;
+  }
+  public function getTotalSize()
+  {
+    return $this->totalSize;
+  }
+}
+
+class Google_Service_MyBusiness_ListMediaItemsResponse extends Google_Collection
+{
+  protected $collection_key = 'mediaItems';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $mediaItemsType = 'Google_Service_MyBusiness_MediaItem';
+  protected $mediaItemsDataType = 'array';
+  public $nextPageToken;
+  public $totalMediaItemCount;
+
+
+  public function setMediaItems($mediaItems)
+  {
+    $this->mediaItems = $mediaItems;
+  }
+  public function getMediaItems()
+  {
+    return $this->mediaItems;
+  }
+  public function setNextPageToken($nextPageToken)
+  {
+    $this->nextPageToken = $nextPageToken;
+  }
+  public function getNextPageToken()
+  {
+    return $this->nextPageToken;
+  }
+  public function setTotalMediaItemCount($totalMediaItemCount)
+  {
+    $this->totalMediaItemCount = $totalMediaItemCount;
+  }
+  public function getTotalMediaItemCount()
+  {
+    return $this->totalMediaItemCount;
+  }
+}
+
+class Google_Service_MyBusiness_ListQuestionsResponse extends Google_Collection
+{
+  protected $collection_key = 'questions';
+  protected $internal_gapi_mappings = array(
+  );
+  public $nextPageToken;
+  protected $questionsType = 'Google_Service_MyBusiness_Question';
+  protected $questionsDataType = 'array';
+  public $totalSize;
+
+
+  public function setNextPageToken($nextPageToken)
+  {
+    $this->nextPageToken = $nextPageToken;
+  }
+  public function getNextPageToken()
+  {
+    return $this->nextPageToken;
+  }
+  public function setQuestions($questions)
+  {
+    $this->questions = $questions;
+  }
+  public function getQuestions()
+  {
+    return $this->questions;
+  }
+  public function setTotalSize($totalSize)
+  {
+    $this->totalSize = $totalSize;
+  }
+  public function getTotalSize()
+  {
+    return $this->totalSize;
+  }
+}
+
+class Google_Service_MyBusiness_ListRecommendedGoogleLocationsResponse extends Google_Collection
+{
+  protected $collection_key = 'googleLocations';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $googleLocationsType = 'Google_Service_MyBusiness_GoogleLocation';
+  protected $googleLocationsDataType = 'array';
+  public $nextPageToken;
+  public $totalSize;
+
+
+  public function setGoogleLocations($googleLocations)
+  {
+    $this->googleLocations = $googleLocations;
+  }
+  public function getGoogleLocations()
+  {
+    return $this->googleLocations;
+  }
+  public function setNextPageToken($nextPageToken)
+  {
+    $this->nextPageToken = $nextPageToken;
+  }
+  public function getNextPageToken()
+  {
+    return $this->nextPageToken;
+  }
+  public function setTotalSize($totalSize)
+  {
+    $this->totalSize = $totalSize;
+  }
+  public function getTotalSize()
+  {
+    return $this->totalSize;
   }
 }
 
@@ -2132,9 +4647,257 @@ class Google_Service_MyBusiness_ListReviewsResponse extends Google_Collection
   }
 }
 
+class Google_Service_MyBusiness_ListVerificationsResponse extends Google_Collection
+{
+  protected $collection_key = 'verifications';
+  protected $internal_gapi_mappings = array(
+  );
+  public $nextPageToken;
+  protected $verificationsType = 'Google_Service_MyBusiness_Verification';
+  protected $verificationsDataType = 'array';
+
+
+  public function setNextPageToken($nextPageToken)
+  {
+    $this->nextPageToken = $nextPageToken;
+  }
+  public function getNextPageToken()
+  {
+    return $this->nextPageToken;
+  }
+  public function setVerifications($verifications)
+  {
+    $this->verifications = $verifications;
+  }
+  public function getVerifications()
+  {
+    return $this->verifications;
+  }
+}
+
+class Google_Service_MyBusiness_LocalPost extends Google_Collection
+{
+  protected $collection_key = 'media';
+  protected $internal_gapi_mappings = array(
+  );
+  public $alertType;
+  protected $callToActionType = 'Google_Service_MyBusiness_CallToAction';
+  protected $callToActionDataType = '';
+  public $createTime;
+  protected $eventType = 'Google_Service_MyBusiness_LocalPostEvent';
+  protected $eventDataType = '';
+  public $languageCode;
+  protected $mediaType = 'Google_Service_MyBusiness_MediaItem';
+  protected $mediaDataType = 'array';
+  public $name;
+  protected $offerType = 'Google_Service_MyBusiness_LocalPostOffer';
+  protected $offerDataType = '';
+  public $searchUrl;
+  public $state;
+  public $summary;
+  public $topicType;
+  public $updateTime;
+
+
+  public function setAlertType($alertType)
+  {
+    $this->alertType = $alertType;
+  }
+  public function getAlertType()
+  {
+    return $this->alertType;
+  }
+  public function setCallToAction(Google_Service_MyBusiness_CallToAction $callToAction)
+  {
+    $this->callToAction = $callToAction;
+  }
+  public function getCallToAction()
+  {
+    return $this->callToAction;
+  }
+  public function setCreateTime($createTime)
+  {
+    $this->createTime = $createTime;
+  }
+  public function getCreateTime()
+  {
+    return $this->createTime;
+  }
+  public function setEvent(Google_Service_MyBusiness_LocalPostEvent $event)
+  {
+    $this->event = $event;
+  }
+  public function getEvent()
+  {
+    return $this->event;
+  }
+  public function setLanguageCode($languageCode)
+  {
+    $this->languageCode = $languageCode;
+  }
+  public function getLanguageCode()
+  {
+    return $this->languageCode;
+  }
+  public function setMedia($media)
+  {
+    $this->media = $media;
+  }
+  public function getMedia()
+  {
+    return $this->media;
+  }
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+  public function setOffer(Google_Service_MyBusiness_LocalPostOffer $offer)
+  {
+    $this->offer = $offer;
+  }
+  public function getOffer()
+  {
+    return $this->offer;
+  }
+  public function setSearchUrl($searchUrl)
+  {
+    $this->searchUrl = $searchUrl;
+  }
+  public function getSearchUrl()
+  {
+    return $this->searchUrl;
+  }
+  public function setState($state)
+  {
+    $this->state = $state;
+  }
+  public function getState()
+  {
+    return $this->state;
+  }
+  public function setSummary($summary)
+  {
+    $this->summary = $summary;
+  }
+  public function getSummary()
+  {
+    return $this->summary;
+  }
+  public function setTopicType($topicType)
+  {
+    $this->topicType = $topicType;
+  }
+  public function getTopicType()
+  {
+    return $this->topicType;
+  }
+  public function setUpdateTime($updateTime)
+  {
+    $this->updateTime = $updateTime;
+  }
+  public function getUpdateTime()
+  {
+    return $this->updateTime;
+  }
+}
+
+class Google_Service_MyBusiness_LocalPostEvent extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $scheduleType = 'Google_Service_MyBusiness_TimeInterval';
+  protected $scheduleDataType = '';
+  public $title;
+
+
+  public function setSchedule(Google_Service_MyBusiness_TimeInterval $schedule)
+  {
+    $this->schedule = $schedule;
+  }
+  public function getSchedule()
+  {
+    return $this->schedule;
+  }
+  public function setTitle($title)
+  {
+    $this->title = $title;
+  }
+  public function getTitle()
+  {
+    return $this->title;
+  }
+}
+
+class Google_Service_MyBusiness_LocalPostMetrics extends Google_Collection
+{
+  protected $collection_key = 'metricValues';
+  protected $internal_gapi_mappings = array(
+  );
+  public $localPostName;
+  protected $metricValuesType = 'Google_Service_MyBusiness_MetricValue';
+  protected $metricValuesDataType = 'array';
+
+
+  public function setLocalPostName($localPostName)
+  {
+    $this->localPostName = $localPostName;
+  }
+  public function getLocalPostName()
+  {
+    return $this->localPostName;
+  }
+  public function setMetricValues($metricValues)
+  {
+    $this->metricValues = $metricValues;
+  }
+  public function getMetricValues()
+  {
+    return $this->metricValues;
+  }
+}
+
+class Google_Service_MyBusiness_LocalPostOffer extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $couponCode;
+  public $redeemOnlineUrl;
+  public $termsConditions;
+
+
+  public function setCouponCode($couponCode)
+  {
+    $this->couponCode = $couponCode;
+  }
+  public function getCouponCode()
+  {
+    return $this->couponCode;
+  }
+  public function setRedeemOnlineUrl($redeemOnlineUrl)
+  {
+    $this->redeemOnlineUrl = $redeemOnlineUrl;
+  }
+  public function getRedeemOnlineUrl()
+  {
+    return $this->redeemOnlineUrl;
+  }
+  public function setTermsConditions($termsConditions)
+  {
+    $this->termsConditions = $termsConditions;
+  }
+  public function getTermsConditions()
+  {
+    return $this->termsConditions;
+  }
+}
+
 class Google_Service_MyBusiness_Location extends Google_Collection
 {
-  protected $collection_key = 'labels';
+  protected $collection_key = 'priceLists';
   protected $internal_gapi_mappings = array(
   );
   protected $adWordsLocationExtensionsType = 'Google_Service_MyBusiness_AdWordsLocationExtensions';
@@ -2142,7 +4905,7 @@ class Google_Service_MyBusiness_Location extends Google_Collection
   protected $additionalCategoriesType = 'Google_Service_MyBusiness_Category';
   protected $additionalCategoriesDataType = 'array';
   public $additionalPhones;
-  protected $addressType = 'Google_Service_MyBusiness_Address';
+  protected $addressType = 'Google_Service_MyBusiness_PostalAddress';
   protected $addressDataType = '';
   protected $attributesType = 'Google_Service_MyBusiness_Attribute';
   protected $attributesDataType = 'array';
@@ -2160,13 +4923,17 @@ class Google_Service_MyBusiness_Location extends Google_Collection
   public $name;
   protected $openInfoType = 'Google_Service_MyBusiness_OpenInfo';
   protected $openInfoDataType = '';
-  protected $photosType = 'Google_Service_MyBusiness_Photos';
-  protected $photosDataType = '';
+  protected $priceListsType = 'Google_Service_MyBusiness_PriceList';
+  protected $priceListsDataType = 'array';
   protected $primaryCategoryType = 'Google_Service_MyBusiness_Category';
   protected $primaryCategoryDataType = '';
   public $primaryPhone;
+  protected $profileType = 'Google_Service_MyBusiness_Profile';
+  protected $profileDataType = '';
   protected $regularHoursType = 'Google_Service_MyBusiness_BusinessHours';
   protected $regularHoursDataType = '';
+  protected $relationshipDataType = 'Google_Service_MyBusiness_RelationshipData';
+  protected $relationshipDataDataType = '';
   protected $serviceAreaType = 'Google_Service_MyBusiness_ServiceAreaBusiness';
   protected $serviceAreaDataType = '';
   protected $specialHoursType = 'Google_Service_MyBusiness_SpecialHours';
@@ -2199,7 +4966,7 @@ class Google_Service_MyBusiness_Location extends Google_Collection
   {
     return $this->additionalPhones;
   }
-  public function setAddress(Google_Service_MyBusiness_Address $address)
+  public function setAddress(Google_Service_MyBusiness_PostalAddress $address)
   {
     $this->address = $address;
   }
@@ -2287,13 +5054,13 @@ class Google_Service_MyBusiness_Location extends Google_Collection
   {
     return $this->openInfo;
   }
-  public function setPhotos(Google_Service_MyBusiness_Photos $photos)
+  public function setPriceLists($priceLists)
   {
-    $this->photos = $photos;
+    $this->priceLists = $priceLists;
   }
-  public function getPhotos()
+  public function getPriceLists()
   {
-    return $this->photos;
+    return $this->priceLists;
   }
   public function setPrimaryCategory(Google_Service_MyBusiness_Category $primaryCategory)
   {
@@ -2311,6 +5078,14 @@ class Google_Service_MyBusiness_Location extends Google_Collection
   {
     return $this->primaryPhone;
   }
+  public function setProfile(Google_Service_MyBusiness_Profile $profile)
+  {
+    $this->profile = $profile;
+  }
+  public function getProfile()
+  {
+    return $this->profile;
+  }
   public function setRegularHours(Google_Service_MyBusiness_BusinessHours $regularHours)
   {
     $this->regularHours = $regularHours;
@@ -2318,6 +5093,14 @@ class Google_Service_MyBusiness_Location extends Google_Collection
   public function getRegularHours()
   {
     return $this->regularHours;
+  }
+  public function setRelationshipData(Google_Service_MyBusiness_RelationshipData $relationshipData)
+  {
+    $this->relationshipData = $relationshipData;
+  }
+  public function getRelationshipData()
+  {
+    return $this->relationshipData;
   }
   public function setServiceArea(Google_Service_MyBusiness_ServiceAreaBusiness $serviceArea)
   {
@@ -2350,6 +5133,32 @@ class Google_Service_MyBusiness_Location extends Google_Collection
   public function getWebsiteUrl()
   {
     return $this->websiteUrl;
+  }
+}
+
+class Google_Service_MyBusiness_LocationAssociation extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $category;
+  public $priceListItemId;
+
+
+  public function setCategory($category)
+  {
+    $this->category = $category;
+  }
+  public function getCategory()
+  {
+    return $this->category;
+  }
+  public function setPriceListItemId($priceListItemId)
+  {
+    $this->priceListItemId = $priceListItemId;
+  }
+  public function getPriceListItemId()
+  {
+    return $this->priceListItemId;
   }
 }
 
@@ -2471,17 +5280,47 @@ class Google_Service_MyBusiness_LocationMetrics extends Google_Collection
   }
 }
 
+class Google_Service_MyBusiness_LocationReview extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $name;
+  protected $reviewType = 'Google_Service_MyBusiness_Review';
+  protected $reviewDataType = '';
+
+
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+  public function setReview(Google_Service_MyBusiness_Review $review)
+  {
+    $this->review = $review;
+  }
+  public function getReview()
+  {
+    return $this->review;
+  }
+}
+
 class Google_Service_MyBusiness_LocationState extends Google_Model
 {
   protected $internal_gapi_mappings = array(
   );
   public $canDelete;
+  public $canModifyServiceList;
   public $canUpdate;
+  public $hasPendingEdits;
   public $hasPendingVerification;
   public $isDisabled;
   public $isDisconnected;
   public $isDuplicate;
   public $isGoogleUpdated;
+  public $isLocalPostApiDisabled;
   public $isPendingReview;
   public $isPublished;
   public $isSuspended;
@@ -2497,6 +5336,14 @@ class Google_Service_MyBusiness_LocationState extends Google_Model
   {
     return $this->canDelete;
   }
+  public function setCanModifyServiceList($canModifyServiceList)
+  {
+    $this->canModifyServiceList = $canModifyServiceList;
+  }
+  public function getCanModifyServiceList()
+  {
+    return $this->canModifyServiceList;
+  }
   public function setCanUpdate($canUpdate)
   {
     $this->canUpdate = $canUpdate;
@@ -2504,6 +5351,14 @@ class Google_Service_MyBusiness_LocationState extends Google_Model
   public function getCanUpdate()
   {
     return $this->canUpdate;
+  }
+  public function setHasPendingEdits($hasPendingEdits)
+  {
+    $this->hasPendingEdits = $hasPendingEdits;
+  }
+  public function getHasPendingEdits()
+  {
+    return $this->hasPendingEdits;
   }
   public function setHasPendingVerification($hasPendingVerification)
   {
@@ -2544,6 +5399,14 @@ class Google_Service_MyBusiness_LocationState extends Google_Model
   public function getIsGoogleUpdated()
   {
     return $this->isGoogleUpdated;
+  }
+  public function setIsLocalPostApiDisabled($isLocalPostApiDisabled)
+  {
+    $this->isLocalPostApiDisabled = $isLocalPostApiDisabled;
+  }
+  public function getIsLocalPostApiDisabled()
+  {
+    return $this->isLocalPostApiDisabled;
   }
   public function setIsPendingReview($isPendingReview)
   {
@@ -2614,6 +5477,161 @@ class Google_Service_MyBusiness_MatchedLocation extends Google_Model
   }
 }
 
+class Google_Service_MyBusiness_MediaInsights extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $viewCount;
+
+
+  public function setViewCount($viewCount)
+  {
+    $this->viewCount = $viewCount;
+  }
+  public function getViewCount()
+  {
+    return $this->viewCount;
+  }
+}
+
+class Google_Service_MyBusiness_MediaItem extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $attributionType = 'Google_Service_MyBusiness_Attribution';
+  protected $attributionDataType = '';
+  public $createTime;
+  protected $dataRefType = 'Google_Service_MyBusiness_MediaItemDataRef';
+  protected $dataRefDataType = '';
+  public $description;
+  protected $dimensionsType = 'Google_Service_MyBusiness_Dimensions';
+  protected $dimensionsDataType = '';
+  public $googleUrl;
+  protected $insightsType = 'Google_Service_MyBusiness_MediaInsights';
+  protected $insightsDataType = '';
+  protected $locationAssociationType = 'Google_Service_MyBusiness_LocationAssociation';
+  protected $locationAssociationDataType = '';
+  public $mediaFormat;
+  public $name;
+  public $sourceUrl;
+  public $thumbnailUrl;
+
+
+  public function setAttribution(Google_Service_MyBusiness_Attribution $attribution)
+  {
+    $this->attribution = $attribution;
+  }
+  public function getAttribution()
+  {
+    return $this->attribution;
+  }
+  public function setCreateTime($createTime)
+  {
+    $this->createTime = $createTime;
+  }
+  public function getCreateTime()
+  {
+    return $this->createTime;
+  }
+  public function setDataRef(Google_Service_MyBusiness_MediaItemDataRef $dataRef)
+  {
+    $this->dataRef = $dataRef;
+  }
+  public function getDataRef()
+  {
+    return $this->dataRef;
+  }
+  public function setDescription($description)
+  {
+    $this->description = $description;
+  }
+  public function getDescription()
+  {
+    return $this->description;
+  }
+  public function setDimensions(Google_Service_MyBusiness_Dimensions $dimensions)
+  {
+    $this->dimensions = $dimensions;
+  }
+  public function getDimensions()
+  {
+    return $this->dimensions;
+  }
+  public function setGoogleUrl($googleUrl)
+  {
+    $this->googleUrl = $googleUrl;
+  }
+  public function getGoogleUrl()
+  {
+    return $this->googleUrl;
+  }
+  public function setInsights(Google_Service_MyBusiness_MediaInsights $insights)
+  {
+    $this->insights = $insights;
+  }
+  public function getInsights()
+  {
+    return $this->insights;
+  }
+  public function setLocationAssociation(Google_Service_MyBusiness_LocationAssociation $locationAssociation)
+  {
+    $this->locationAssociation = $locationAssociation;
+  }
+  public function getLocationAssociation()
+  {
+    return $this->locationAssociation;
+  }
+  public function setMediaFormat($mediaFormat)
+  {
+    $this->mediaFormat = $mediaFormat;
+  }
+  public function getMediaFormat()
+  {
+    return $this->mediaFormat;
+  }
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+  public function setSourceUrl($sourceUrl)
+  {
+    $this->sourceUrl = $sourceUrl;
+  }
+  public function getSourceUrl()
+  {
+    return $this->sourceUrl;
+  }
+  public function setThumbnailUrl($thumbnailUrl)
+  {
+    $this->thumbnailUrl = $thumbnailUrl;
+  }
+  public function getThumbnailUrl()
+  {
+    return $this->thumbnailUrl;
+  }
+}
+
+class Google_Service_MyBusiness_MediaItemDataRef extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $resourceName;
+
+
+  public function setResourceName($resourceName)
+  {
+    $this->resourceName = $resourceName;
+  }
+  public function getResourceName()
+  {
+    return $this->resourceName;
+  }
+}
+
 class Google_Service_MyBusiness_Metadata extends Google_Model
 {
   protected $internal_gapi_mappings = array(
@@ -2621,6 +5639,7 @@ class Google_Service_MyBusiness_Metadata extends Google_Model
   protected $duplicateType = 'Google_Service_MyBusiness_Duplicate';
   protected $duplicateDataType = '';
   public $mapsUrl;
+  public $newReviewUrl;
 
 
   public function setDuplicate(Google_Service_MyBusiness_Duplicate $duplicate)
@@ -2638,6 +5657,14 @@ class Google_Service_MyBusiness_Metadata extends Google_Model
   public function getMapsUrl()
   {
     return $this->mapsUrl;
+  }
+  public function setNewReviewUrl($newReviewUrl)
+  {
+    $this->newReviewUrl = $newReviewUrl;
+  }
+  public function getNewReviewUrl()
+  {
+    return $this->newReviewUrl;
   }
 }
 
@@ -2706,15 +5733,52 @@ class Google_Service_MyBusiness_MetricValue extends Google_Collection
   }
 }
 
+class Google_Service_MyBusiness_Money extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $currencyCode;
+  public $nanos;
+  public $units;
+
+
+  public function setCurrencyCode($currencyCode)
+  {
+    $this->currencyCode = $currencyCode;
+  }
+  public function getCurrencyCode()
+  {
+    return $this->currencyCode;
+  }
+  public function setNanos($nanos)
+  {
+    $this->nanos = $nanos;
+  }
+  public function getNanos()
+  {
+    return $this->nanos;
+  }
+  public function setUnits($units)
+  {
+    $this->units = $units;
+  }
+  public function getUnits()
+  {
+    return $this->units;
+  }
+}
+
 class Google_Service_MyBusiness_MybusinessEmpty extends Google_Model
 {
 }
 
-class Google_Service_MyBusiness_Notifications extends Google_Model
+class Google_Service_MyBusiness_Notifications extends Google_Collection
 {
+  protected $collection_key = 'notificationTypes';
   protected $internal_gapi_mappings = array(
   );
   public $name;
+  public $notificationTypes;
   public $topicName;
 
 
@@ -2725,6 +5789,14 @@ class Google_Service_MyBusiness_Notifications extends Google_Model
   public function getName()
   {
     return $this->name;
+  }
+  public function setNotificationTypes($notificationTypes)
+  {
+    $this->notificationTypes = $notificationTypes;
+  }
+  public function getNotificationTypes()
+  {
+    return $this->notificationTypes;
   }
   public function setTopicName($topicName)
   {
@@ -2741,6 +5813,8 @@ class Google_Service_MyBusiness_OpenInfo extends Google_Model
   protected $internal_gapi_mappings = array(
   );
   public $canReopen;
+  protected $openingDateType = 'Google_Service_MyBusiness_Date';
+  protected $openingDateDataType = '';
   public $status;
 
 
@@ -2752,6 +5826,14 @@ class Google_Service_MyBusiness_OpenInfo extends Google_Model
   {
     return $this->canReopen;
   }
+  public function setOpeningDate(Google_Service_MyBusiness_Date $openingDate)
+  {
+    $this->openingDate = $openingDate;
+  }
+  public function getOpeningDate()
+  {
+    return $this->openingDate;
+  }
   public function setStatus($status)
   {
     $this->status = $status;
@@ -2762,138 +5844,73 @@ class Google_Service_MyBusiness_OpenInfo extends Google_Model
   }
 }
 
-class Google_Service_MyBusiness_Photos extends Google_Collection
+class Google_Service_MyBusiness_OrganizationInfo extends Google_Model
 {
-  protected $collection_key = 'teamPhotoUrls';
   protected $internal_gapi_mappings = array(
   );
-  public $additionalPhotoUrls;
-  public $commonAreasPhotoUrls;
-  public $coverPhotoUrl;
-  public $exteriorPhotoUrls;
-  public $foodAndDrinkPhotoUrls;
-  public $interiorPhotoUrls;
-  public $logoPhotoUrl;
-  public $menuPhotoUrls;
-  public $photosAtWorkUrls;
-  public $preferredPhoto;
-  public $productPhotoUrls;
-  public $profilePhotoUrl;
-  public $roomsPhotoUrls;
-  public $teamPhotoUrls;
+  public $phoneNumber;
+  protected $postalAddressType = 'Google_Service_MyBusiness_PostalAddress';
+  protected $postalAddressDataType = '';
+  public $registeredDomain;
 
 
-  public function setAdditionalPhotoUrls($additionalPhotoUrls)
+  public function setPhoneNumber($phoneNumber)
   {
-    $this->additionalPhotoUrls = $additionalPhotoUrls;
+    $this->phoneNumber = $phoneNumber;
   }
-  public function getAdditionalPhotoUrls()
+  public function getPhoneNumber()
   {
-    return $this->additionalPhotoUrls;
+    return $this->phoneNumber;
   }
-  public function setCommonAreasPhotoUrls($commonAreasPhotoUrls)
+  public function setPostalAddress(Google_Service_MyBusiness_PostalAddress $postalAddress)
   {
-    $this->commonAreasPhotoUrls = $commonAreasPhotoUrls;
+    $this->postalAddress = $postalAddress;
   }
-  public function getCommonAreasPhotoUrls()
+  public function getPostalAddress()
   {
-    return $this->commonAreasPhotoUrls;
+    return $this->postalAddress;
   }
-  public function setCoverPhotoUrl($coverPhotoUrl)
+  public function setRegisteredDomain($registeredDomain)
   {
-    $this->coverPhotoUrl = $coverPhotoUrl;
+    $this->registeredDomain = $registeredDomain;
   }
-  public function getCoverPhotoUrl()
+  public function getRegisteredDomain()
   {
-    return $this->coverPhotoUrl;
+    return $this->registeredDomain;
   }
-  public function setExteriorPhotoUrls($exteriorPhotoUrls)
+}
+
+class Google_Service_MyBusiness_PhoneInput extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $phoneNumber;
+
+
+  public function setPhoneNumber($phoneNumber)
   {
-    $this->exteriorPhotoUrls = $exteriorPhotoUrls;
+    $this->phoneNumber = $phoneNumber;
   }
-  public function getExteriorPhotoUrls()
+  public function getPhoneNumber()
   {
-    return $this->exteriorPhotoUrls;
+    return $this->phoneNumber;
   }
-  public function setFoodAndDrinkPhotoUrls($foodAndDrinkPhotoUrls)
+}
+
+class Google_Service_MyBusiness_PhoneVerificationData extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $phoneNumber;
+
+
+  public function setPhoneNumber($phoneNumber)
   {
-    $this->foodAndDrinkPhotoUrls = $foodAndDrinkPhotoUrls;
+    $this->phoneNumber = $phoneNumber;
   }
-  public function getFoodAndDrinkPhotoUrls()
+  public function getPhoneNumber()
   {
-    return $this->foodAndDrinkPhotoUrls;
-  }
-  public function setInteriorPhotoUrls($interiorPhotoUrls)
-  {
-    $this->interiorPhotoUrls = $interiorPhotoUrls;
-  }
-  public function getInteriorPhotoUrls()
-  {
-    return $this->interiorPhotoUrls;
-  }
-  public function setLogoPhotoUrl($logoPhotoUrl)
-  {
-    $this->logoPhotoUrl = $logoPhotoUrl;
-  }
-  public function getLogoPhotoUrl()
-  {
-    return $this->logoPhotoUrl;
-  }
-  public function setMenuPhotoUrls($menuPhotoUrls)
-  {
-    $this->menuPhotoUrls = $menuPhotoUrls;
-  }
-  public function getMenuPhotoUrls()
-  {
-    return $this->menuPhotoUrls;
-  }
-  public function setPhotosAtWorkUrls($photosAtWorkUrls)
-  {
-    $this->photosAtWorkUrls = $photosAtWorkUrls;
-  }
-  public function getPhotosAtWorkUrls()
-  {
-    return $this->photosAtWorkUrls;
-  }
-  public function setPreferredPhoto($preferredPhoto)
-  {
-    $this->preferredPhoto = $preferredPhoto;
-  }
-  public function getPreferredPhoto()
-  {
-    return $this->preferredPhoto;
-  }
-  public function setProductPhotoUrls($productPhotoUrls)
-  {
-    $this->productPhotoUrls = $productPhotoUrls;
-  }
-  public function getProductPhotoUrls()
-  {
-    return $this->productPhotoUrls;
-  }
-  public function setProfilePhotoUrl($profilePhotoUrl)
-  {
-    $this->profilePhotoUrl = $profilePhotoUrl;
-  }
-  public function getProfilePhotoUrl()
-  {
-    return $this->profilePhotoUrl;
-  }
-  public function setRoomsPhotoUrls($roomsPhotoUrls)
-  {
-    $this->roomsPhotoUrls = $roomsPhotoUrls;
-  }
-  public function getRoomsPhotoUrls()
-  {
-    return $this->roomsPhotoUrls;
-  }
-  public function setTeamPhotoUrls($teamPhotoUrls)
-  {
-    $this->teamPhotoUrls = $teamPhotoUrls;
-  }
-  public function getTeamPhotoUrls()
-  {
-    return $this->teamPhotoUrls;
+    return $this->phoneNumber;
   }
 }
 
@@ -2969,6 +5986,261 @@ class Google_Service_MyBusiness_PointRadius extends Google_Model
   }
 }
 
+class Google_Service_MyBusiness_PostalAddress extends Google_Collection
+{
+  protected $collection_key = 'recipients';
+  protected $internal_gapi_mappings = array(
+  );
+  public $addressLines;
+  public $administrativeArea;
+  public $languageCode;
+  public $locality;
+  public $organization;
+  public $postalCode;
+  public $recipients;
+  public $regionCode;
+  public $revision;
+  public $sortingCode;
+  public $sublocality;
+
+
+  public function setAddressLines($addressLines)
+  {
+    $this->addressLines = $addressLines;
+  }
+  public function getAddressLines()
+  {
+    return $this->addressLines;
+  }
+  public function setAdministrativeArea($administrativeArea)
+  {
+    $this->administrativeArea = $administrativeArea;
+  }
+  public function getAdministrativeArea()
+  {
+    return $this->administrativeArea;
+  }
+  public function setLanguageCode($languageCode)
+  {
+    $this->languageCode = $languageCode;
+  }
+  public function getLanguageCode()
+  {
+    return $this->languageCode;
+  }
+  public function setLocality($locality)
+  {
+    $this->locality = $locality;
+  }
+  public function getLocality()
+  {
+    return $this->locality;
+  }
+  public function setOrganization($organization)
+  {
+    $this->organization = $organization;
+  }
+  public function getOrganization()
+  {
+    return $this->organization;
+  }
+  public function setPostalCode($postalCode)
+  {
+    $this->postalCode = $postalCode;
+  }
+  public function getPostalCode()
+  {
+    return $this->postalCode;
+  }
+  public function setRecipients($recipients)
+  {
+    $this->recipients = $recipients;
+  }
+  public function getRecipients()
+  {
+    return $this->recipients;
+  }
+  public function setRegionCode($regionCode)
+  {
+    $this->regionCode = $regionCode;
+  }
+  public function getRegionCode()
+  {
+    return $this->regionCode;
+  }
+  public function setRevision($revision)
+  {
+    $this->revision = $revision;
+  }
+  public function getRevision()
+  {
+    return $this->revision;
+  }
+  public function setSortingCode($sortingCode)
+  {
+    $this->sortingCode = $sortingCode;
+  }
+  public function getSortingCode()
+  {
+    return $this->sortingCode;
+  }
+  public function setSublocality($sublocality)
+  {
+    $this->sublocality = $sublocality;
+  }
+  public function getSublocality()
+  {
+    return $this->sublocality;
+  }
+}
+
+class Google_Service_MyBusiness_PriceList extends Google_Collection
+{
+  protected $collection_key = 'sections';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $labelsType = 'Google_Service_MyBusiness_Label';
+  protected $labelsDataType = 'array';
+  public $priceListId;
+  protected $sectionsType = 'Google_Service_MyBusiness_Section';
+  protected $sectionsDataType = 'array';
+  public $sourceUrl;
+
+
+  public function setLabels($labels)
+  {
+    $this->labels = $labels;
+  }
+  public function getLabels()
+  {
+    return $this->labels;
+  }
+  public function setPriceListId($priceListId)
+  {
+    $this->priceListId = $priceListId;
+  }
+  public function getPriceListId()
+  {
+    return $this->priceListId;
+  }
+  public function setSections($sections)
+  {
+    $this->sections = $sections;
+  }
+  public function getSections()
+  {
+    return $this->sections;
+  }
+  public function setSourceUrl($sourceUrl)
+  {
+    $this->sourceUrl = $sourceUrl;
+  }
+  public function getSourceUrl()
+  {
+    return $this->sourceUrl;
+  }
+}
+
+class Google_Service_MyBusiness_Profile extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $description;
+
+
+  public function setDescription($description)
+  {
+    $this->description = $description;
+  }
+  public function getDescription()
+  {
+    return $this->description;
+  }
+}
+
+class Google_Service_MyBusiness_Question extends Google_Collection
+{
+  protected $collection_key = 'topAnswers';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $authorType = 'Google_Service_MyBusiness_Author';
+  protected $authorDataType = '';
+  public $createTime;
+  public $name;
+  public $text;
+  protected $topAnswersType = 'Google_Service_MyBusiness_Answer';
+  protected $topAnswersDataType = 'array';
+  public $totalAnswerCount;
+  public $updateTime;
+  public $upvoteCount;
+
+
+  public function setAuthor(Google_Service_MyBusiness_Author $author)
+  {
+    $this->author = $author;
+  }
+  public function getAuthor()
+  {
+    return $this->author;
+  }
+  public function setCreateTime($createTime)
+  {
+    $this->createTime = $createTime;
+  }
+  public function getCreateTime()
+  {
+    return $this->createTime;
+  }
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+  public function setText($text)
+  {
+    $this->text = $text;
+  }
+  public function getText()
+  {
+    return $this->text;
+  }
+  public function setTopAnswers($topAnswers)
+  {
+    $this->topAnswers = $topAnswers;
+  }
+  public function getTopAnswers()
+  {
+    return $this->topAnswers;
+  }
+  public function setTotalAnswerCount($totalAnswerCount)
+  {
+    $this->totalAnswerCount = $totalAnswerCount;
+  }
+  public function getTotalAnswerCount()
+  {
+    return $this->totalAnswerCount;
+  }
+  public function setUpdateTime($updateTime)
+  {
+    $this->updateTime = $updateTime;
+  }
+  public function getUpdateTime()
+  {
+    return $this->updateTime;
+  }
+  public function setUpvoteCount($upvoteCount)
+  {
+    $this->upvoteCount = $upvoteCount;
+  }
+  public function getUpvoteCount()
+  {
+    return $this->upvoteCount;
+  }
+}
+
 class Google_Service_MyBusiness_RegionCount extends Google_Model
 {
   protected $internal_gapi_mappings = array(
@@ -3005,6 +6277,23 @@ class Google_Service_MyBusiness_RegionCount extends Google_Model
   }
 }
 
+class Google_Service_MyBusiness_RelationshipData extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $parentChain;
+
+
+  public function setParentChain($parentChain)
+  {
+    $this->parentChain = $parentChain;
+  }
+  public function getParentChain()
+  {
+    return $this->parentChain;
+  }
+}
+
 class Google_Service_MyBusiness_RepeatedEnumAttributeValue extends Google_Collection
 {
   protected $collection_key = 'unsetValues';
@@ -3029,6 +6318,124 @@ class Google_Service_MyBusiness_RepeatedEnumAttributeValue extends Google_Collec
   public function getUnsetValues()
   {
     return $this->unsetValues;
+  }
+}
+
+class Google_Service_MyBusiness_ReportGoogleLocationRequest extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $locationGroupName;
+  public $reportReasonBadLocation;
+  public $reportReasonBadRecommendation;
+  public $reportReasonElaboration;
+  public $reportReasonLanguageCode;
+
+
+  public function setLocationGroupName($locationGroupName)
+  {
+    $this->locationGroupName = $locationGroupName;
+  }
+  public function getLocationGroupName()
+  {
+    return $this->locationGroupName;
+  }
+  public function setReportReasonBadLocation($reportReasonBadLocation)
+  {
+    $this->reportReasonBadLocation = $reportReasonBadLocation;
+  }
+  public function getReportReasonBadLocation()
+  {
+    return $this->reportReasonBadLocation;
+  }
+  public function setReportReasonBadRecommendation($reportReasonBadRecommendation)
+  {
+    $this->reportReasonBadRecommendation = $reportReasonBadRecommendation;
+  }
+  public function getReportReasonBadRecommendation()
+  {
+    return $this->reportReasonBadRecommendation;
+  }
+  public function setReportReasonElaboration($reportReasonElaboration)
+  {
+    $this->reportReasonElaboration = $reportReasonElaboration;
+  }
+  public function getReportReasonElaboration()
+  {
+    return $this->reportReasonElaboration;
+  }
+  public function setReportReasonLanguageCode($reportReasonLanguageCode)
+  {
+    $this->reportReasonLanguageCode = $reportReasonLanguageCode;
+  }
+  public function getReportReasonLanguageCode()
+  {
+    return $this->reportReasonLanguageCode;
+  }
+}
+
+class Google_Service_MyBusiness_ReportLocalPostInsightsRequest extends Google_Collection
+{
+  protected $collection_key = 'localPostNames';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $basicRequestType = 'Google_Service_MyBusiness_BasicMetricsRequest';
+  protected $basicRequestDataType = '';
+  public $localPostNames;
+
+
+  public function setBasicRequest(Google_Service_MyBusiness_BasicMetricsRequest $basicRequest)
+  {
+    $this->basicRequest = $basicRequest;
+  }
+  public function getBasicRequest()
+  {
+    return $this->basicRequest;
+  }
+  public function setLocalPostNames($localPostNames)
+  {
+    $this->localPostNames = $localPostNames;
+  }
+  public function getLocalPostNames()
+  {
+    return $this->localPostNames;
+  }
+}
+
+class Google_Service_MyBusiness_ReportLocalPostInsightsResponse extends Google_Collection
+{
+  protected $collection_key = 'localPostMetrics';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $localPostMetricsType = 'Google_Service_MyBusiness_LocalPostMetrics';
+  protected $localPostMetricsDataType = 'array';
+  public $name;
+  public $timeZone;
+
+
+  public function setLocalPostMetrics($localPostMetrics)
+  {
+    $this->localPostMetrics = $localPostMetrics;
+  }
+  public function getLocalPostMetrics()
+  {
+    return $this->localPostMetrics;
+  }
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+  public function setTimeZone($timeZone)
+  {
+    $this->timeZone = $timeZone;
+  }
+  public function getTimeZone()
+  {
+    return $this->timeZone;
   }
 }
 
@@ -3105,6 +6512,7 @@ class Google_Service_MyBusiness_Review extends Google_Model
   );
   public $comment;
   public $createTime;
+  public $name;
   public $reviewId;
   protected $reviewReplyType = 'Google_Service_MyBusiness_ReviewReply';
   protected $reviewReplyDataType = '';
@@ -3129,6 +6537,14 @@ class Google_Service_MyBusiness_Review extends Google_Model
   public function getCreateTime()
   {
     return $this->createTime;
+  }
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
   }
   public function setReviewId($reviewId)
   {
@@ -3204,6 +6620,7 @@ class Google_Service_MyBusiness_Reviewer extends Google_Model
   );
   public $displayName;
   public $isAnonymous;
+  public $profilePhotoUrl;
 
 
   public function setDisplayName($displayName)
@@ -3221,6 +6638,135 @@ class Google_Service_MyBusiness_Reviewer extends Google_Model
   public function getIsAnonymous()
   {
     return $this->isAnonymous;
+  }
+  public function setProfilePhotoUrl($profilePhotoUrl)
+  {
+    $this->profilePhotoUrl = $profilePhotoUrl;
+  }
+  public function getProfilePhotoUrl()
+  {
+    return $this->profilePhotoUrl;
+  }
+}
+
+class Google_Service_MyBusiness_SearchChainsResponse extends Google_Collection
+{
+  protected $collection_key = 'chains';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $chainsType = 'Google_Service_MyBusiness_Chain';
+  protected $chainsDataType = 'array';
+
+
+  public function setChains($chains)
+  {
+    $this->chains = $chains;
+  }
+  public function getChains()
+  {
+    return $this->chains;
+  }
+}
+
+class Google_Service_MyBusiness_SearchGoogleLocationsRequest extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $locationType = 'Google_Service_MyBusiness_Location';
+  protected $locationDataType = '';
+  public $query;
+  public $resultCount;
+
+
+  public function setLocation(Google_Service_MyBusiness_Location $location)
+  {
+    $this->location = $location;
+  }
+  public function getLocation()
+  {
+    return $this->location;
+  }
+  public function setQuery($query)
+  {
+    $this->query = $query;
+  }
+  public function getQuery()
+  {
+    return $this->query;
+  }
+  public function setResultCount($resultCount)
+  {
+    $this->resultCount = $resultCount;
+  }
+  public function getResultCount()
+  {
+    return $this->resultCount;
+  }
+}
+
+class Google_Service_MyBusiness_SearchGoogleLocationsResponse extends Google_Collection
+{
+  protected $collection_key = 'googleLocations';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $googleLocationsType = 'Google_Service_MyBusiness_GoogleLocation';
+  protected $googleLocationsDataType = 'array';
+
+
+  public function setGoogleLocations($googleLocations)
+  {
+    $this->googleLocations = $googleLocations;
+  }
+  public function getGoogleLocations()
+  {
+    return $this->googleLocations;
+  }
+}
+
+class Google_Service_MyBusiness_Section extends Google_Collection
+{
+  protected $collection_key = 'labels';
+  protected $internal_gapi_mappings = array(
+  );
+  protected $itemsType = 'Google_Service_MyBusiness_Item';
+  protected $itemsDataType = 'array';
+  protected $labelsType = 'Google_Service_MyBusiness_Label';
+  protected $labelsDataType = 'array';
+  public $sectionId;
+  public $sectionType;
+
+
+  public function setItems($items)
+  {
+    $this->items = $items;
+  }
+  public function getItems()
+  {
+    return $this->items;
+  }
+  public function setLabels($labels)
+  {
+    $this->labels = $labels;
+  }
+  public function getLabels()
+  {
+    return $this->labels;
+  }
+  public function setSectionId($sectionId)
+  {
+    $this->sectionId = $sectionId;
+  }
+  public function getSectionId()
+  {
+    return $this->sectionId;
+  }
+  public function setSectionType($sectionType)
+  {
+    $this->sectionType = $sectionType;
+  }
+  public function getSectionType()
+  {
+    return $this->sectionType;
   }
 }
 
@@ -3258,6 +6804,99 @@ class Google_Service_MyBusiness_ServiceAreaBusiness extends Google_Model
   public function getRadius()
   {
     return $this->radius;
+  }
+}
+
+class Google_Service_MyBusiness_ServiceBusinessContext extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $addressType = 'Google_Service_MyBusiness_PostalAddress';
+  protected $addressDataType = '';
+
+
+  public function setAddress(Google_Service_MyBusiness_PostalAddress $address)
+  {
+    $this->address = $address;
+  }
+  public function getAddress()
+  {
+    return $this->address;
+  }
+}
+
+class Google_Service_MyBusiness_ServiceItem extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $freeFormServiceItemType = 'Google_Service_MyBusiness_FreeFormServiceItem';
+  protected $freeFormServiceItemDataType = '';
+  public $isOffered;
+  protected $priceType = 'Google_Service_MyBusiness_Money';
+  protected $priceDataType = '';
+  protected $structuredServiceItemType = 'Google_Service_MyBusiness_StructuredServiceItem';
+  protected $structuredServiceItemDataType = '';
+
+
+  public function setFreeFormServiceItem(Google_Service_MyBusiness_FreeFormServiceItem $freeFormServiceItem)
+  {
+    $this->freeFormServiceItem = $freeFormServiceItem;
+  }
+  public function getFreeFormServiceItem()
+  {
+    return $this->freeFormServiceItem;
+  }
+  public function setIsOffered($isOffered)
+  {
+    $this->isOffered = $isOffered;
+  }
+  public function getIsOffered()
+  {
+    return $this->isOffered;
+  }
+  public function setPrice(Google_Service_MyBusiness_Money $price)
+  {
+    $this->price = $price;
+  }
+  public function getPrice()
+  {
+    return $this->price;
+  }
+  public function setStructuredServiceItem(Google_Service_MyBusiness_StructuredServiceItem $structuredServiceItem)
+  {
+    $this->structuredServiceItem = $structuredServiceItem;
+  }
+  public function getStructuredServiceItem()
+  {
+    return $this->structuredServiceItem;
+  }
+}
+
+class Google_Service_MyBusiness_ServiceList extends Google_Collection
+{
+  protected $collection_key = 'serviceItems';
+  protected $internal_gapi_mappings = array(
+  );
+  public $name;
+  protected $serviceItemsType = 'Google_Service_MyBusiness_ServiceItem';
+  protected $serviceItemsDataType = 'array';
+
+
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+  public function setServiceItems($serviceItems)
+  {
+    $this->serviceItems = $serviceItems;
+  }
+  public function getServiceItems()
+  {
+    return $this->serviceItems;
   }
 }
 
@@ -3335,6 +6974,62 @@ class Google_Service_MyBusiness_SpecialHours extends Google_Collection
   }
 }
 
+class Google_Service_MyBusiness_StartUploadMediaItemDataRequest extends Google_Model
+{
+}
+
+class Google_Service_MyBusiness_StructuredServiceItem extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $description;
+  public $serviceTypeId;
+
+
+  public function setDescription($description)
+  {
+    $this->description = $description;
+  }
+  public function getDescription()
+  {
+    return $this->description;
+  }
+  public function setServiceTypeId($serviceTypeId)
+  {
+    $this->serviceTypeId = $serviceTypeId;
+  }
+  public function getServiceTypeId()
+  {
+    return $this->serviceTypeId;
+  }
+}
+
+class Google_Service_MyBusiness_TargetLocation extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $locationAddress;
+  public $locationName;
+
+
+  public function setLocationAddress($locationAddress)
+  {
+    $this->locationAddress = $locationAddress;
+  }
+  public function getLocationAddress()
+  {
+    return $this->locationAddress;
+  }
+  public function setLocationName($locationName)
+  {
+    $this->locationName = $locationName;
+  }
+  public function getLocationName()
+  {
+    return $this->locationName;
+  }
+}
+
 class Google_Service_MyBusiness_TimeDimension extends Google_Model
 {
   protected $internal_gapi_mappings = array(
@@ -3369,6 +7064,54 @@ class Google_Service_MyBusiness_TimeDimension extends Google_Model
   public function getTimeRange()
   {
     return $this->timeRange;
+  }
+}
+
+class Google_Service_MyBusiness_TimeInterval extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $endDateType = 'Google_Service_MyBusiness_Date';
+  protected $endDateDataType = '';
+  protected $endTimeType = 'Google_Service_MyBusiness_TimeOfDay';
+  protected $endTimeDataType = '';
+  protected $startDateType = 'Google_Service_MyBusiness_Date';
+  protected $startDateDataType = '';
+  protected $startTimeType = 'Google_Service_MyBusiness_TimeOfDay';
+  protected $startTimeDataType = '';
+
+
+  public function setEndDate(Google_Service_MyBusiness_Date $endDate)
+  {
+    $this->endDate = $endDate;
+  }
+  public function getEndDate()
+  {
+    return $this->endDate;
+  }
+  public function setEndTime(Google_Service_MyBusiness_TimeOfDay $endTime)
+  {
+    $this->endTime = $endTime;
+  }
+  public function getEndTime()
+  {
+    return $this->endTime;
+  }
+  public function setStartDate(Google_Service_MyBusiness_Date $startDate)
+  {
+    $this->startDate = $startDate;
+  }
+  public function getStartDate()
+  {
+    return $this->startDate;
+  }
+  public function setStartTime(Google_Service_MyBusiness_TimeOfDay $startTime)
+  {
+    $this->startTime = $startTime;
+  }
+  public function getStartTime()
+  {
+    return $this->startTime;
   }
 }
 
@@ -3531,6 +7274,24 @@ class Google_Service_MyBusiness_TransferLocationRequest extends Google_Model
   }
 }
 
+class Google_Service_MyBusiness_UpsertAnswerRequest extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $answerType = 'Google_Service_MyBusiness_Answer';
+  protected $answerDataType = '';
+
+
+  public function setAnswer(Google_Service_MyBusiness_Answer $answer)
+  {
+    $this->answer = $answer;
+  }
+  public function getAnswer()
+  {
+    return $this->answer;
+  }
+}
+
 class Google_Service_MyBusiness_UrlAttributeValue extends Google_Model
 {
   protected $internal_gapi_mappings = array(
@@ -3545,5 +7306,225 @@ class Google_Service_MyBusiness_UrlAttributeValue extends Google_Model
   public function getUrl()
   {
     return $this->url;
+  }
+}
+
+class Google_Service_MyBusiness_Verification extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $createTime;
+  public $method;
+  public $name;
+  public $state;
+
+
+  public function setCreateTime($createTime)
+  {
+    $this->createTime = $createTime;
+  }
+  public function getCreateTime()
+  {
+    return $this->createTime;
+  }
+  public function setMethod($method)
+  {
+    $this->method = $method;
+  }
+  public function getMethod()
+  {
+    return $this->method;
+  }
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
+  public function getName()
+  {
+    return $this->name;
+  }
+  public function setState($state)
+  {
+    $this->state = $state;
+  }
+  public function getState()
+  {
+    return $this->state;
+  }
+}
+
+class Google_Service_MyBusiness_VerificationOption extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $addressDataType = 'Google_Service_MyBusiness_AddressVerificationData';
+  protected $addressDataDataType = '';
+  protected $emailDataType = 'Google_Service_MyBusiness_EmailVerificationData';
+  protected $emailDataDataType = '';
+  protected $phoneDataType = 'Google_Service_MyBusiness_PhoneVerificationData';
+  protected $phoneDataDataType = '';
+  public $verificationMethod;
+
+
+  public function setAddressData(Google_Service_MyBusiness_AddressVerificationData $addressData)
+  {
+    $this->addressData = $addressData;
+  }
+  public function getAddressData()
+  {
+    return $this->addressData;
+  }
+  public function setEmailData(Google_Service_MyBusiness_EmailVerificationData $emailData)
+  {
+    $this->emailData = $emailData;
+  }
+  public function getEmailData()
+  {
+    return $this->emailData;
+  }
+  public function setPhoneData(Google_Service_MyBusiness_PhoneVerificationData $phoneData)
+  {
+    $this->phoneData = $phoneData;
+  }
+  public function getPhoneData()
+  {
+    return $this->phoneData;
+  }
+  public function setVerificationMethod($verificationMethod)
+  {
+    $this->verificationMethod = $verificationMethod;
+  }
+  public function getVerificationMethod()
+  {
+    return $this->verificationMethod;
+  }
+}
+
+class Google_Service_MyBusiness_VerificationToken extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  public $tokenString;
+
+
+  public function setTokenString($tokenString)
+  {
+    $this->tokenString = $tokenString;
+  }
+  public function getTokenString()
+  {
+    return $this->tokenString;
+  }
+}
+
+class Google_Service_MyBusiness_VerifyLocationRequest extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $addressInputType = 'Google_Service_MyBusiness_AddressInput';
+  protected $addressInputDataType = '';
+  protected $contextType = 'Google_Service_MyBusiness_ServiceBusinessContext';
+  protected $contextDataType = '';
+  protected $emailInputType = 'Google_Service_MyBusiness_EmailInput';
+  protected $emailInputDataType = '';
+  public $languageCode;
+  public $method;
+  protected $phoneInputType = 'Google_Service_MyBusiness_PhoneInput';
+  protected $phoneInputDataType = '';
+  protected $vettedPartnerInputType = 'Google_Service_MyBusiness_VettedPartnerInput';
+  protected $vettedPartnerInputDataType = '';
+
+
+  public function setAddressInput(Google_Service_MyBusiness_AddressInput $addressInput)
+  {
+    $this->addressInput = $addressInput;
+  }
+  public function getAddressInput()
+  {
+    return $this->addressInput;
+  }
+  public function setContext(Google_Service_MyBusiness_ServiceBusinessContext $context)
+  {
+    $this->context = $context;
+  }
+  public function getContext()
+  {
+    return $this->context;
+  }
+  public function setEmailInput(Google_Service_MyBusiness_EmailInput $emailInput)
+  {
+    $this->emailInput = $emailInput;
+  }
+  public function getEmailInput()
+  {
+    return $this->emailInput;
+  }
+  public function setLanguageCode($languageCode)
+  {
+    $this->languageCode = $languageCode;
+  }
+  public function getLanguageCode()
+  {
+    return $this->languageCode;
+  }
+  public function setMethod($method)
+  {
+    $this->method = $method;
+  }
+  public function getMethod()
+  {
+    return $this->method;
+  }
+  public function setPhoneInput(Google_Service_MyBusiness_PhoneInput $phoneInput)
+  {
+    $this->phoneInput = $phoneInput;
+  }
+  public function getPhoneInput()
+  {
+    return $this->phoneInput;
+  }
+  public function setVettedPartnerInput(Google_Service_MyBusiness_VettedPartnerInput $vettedPartnerInput)
+  {
+    $this->vettedPartnerInput = $vettedPartnerInput;
+  }
+  public function getVettedPartnerInput()
+  {
+    return $this->vettedPartnerInput;
+  }
+}
+
+class Google_Service_MyBusiness_VerifyLocationResponse extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $verificationType = 'Google_Service_MyBusiness_Verification';
+  protected $verificationDataType = '';
+
+
+  public function setVerification(Google_Service_MyBusiness_Verification $verification)
+  {
+    $this->verification = $verification;
+  }
+  public function getVerification()
+  {
+    return $this->verification;
+  }
+}
+
+class Google_Service_MyBusiness_VettedPartnerInput extends Google_Model
+{
+  protected $internal_gapi_mappings = array(
+  );
+  protected $tokenType = 'Google_Service_MyBusiness_VerificationToken';
+  protected $tokenDataType = '';
+
+
+  public function setToken(Google_Service_MyBusiness_VerificationToken $token)
+  {
+    $this->token = $token;
+  }
+  public function getToken()
+  {
+    return $this->token;
   }
 }

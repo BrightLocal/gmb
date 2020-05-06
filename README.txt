@@ -1,7 +1,6 @@
-PHP library for Google My Business API v3
+PHP library for Google My Business API v4
 
 
-Created on 2017-01-10 at 21:30:54 UTC
 
 Requirements:
 
