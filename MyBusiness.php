@@ -175,7 +175,7 @@ class Google_Service_MyBusiness extends Google_Service
                 ),
               ),
             ),'updateNotifications' => array(
-              'path' => 'v4/{+name}',
+              'path' => 'v4/{+name}/notifications',
               'httpMethod' => 'PUT',
               'parameters' => array(
                 'name' => array(
