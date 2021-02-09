@@ -84,7 +84,7 @@ class Google_Service_MyBusiness extends Google_Service
                             ),
                         ),
                     ),'deleteNotifications' => array(
-                        'path' => 'v4/{+name}',
+                        'path' => 'v4/{+name}/notifications',
                         'httpMethod' => 'DELETE',
                         'parameters' => array(
                             'name' => array(
@@ -114,7 +114,7 @@ class Google_Service_MyBusiness extends Google_Service
                             ),
                         ),
                     ),'getNotifications' => array(
-                        'path' => 'v4/{+name}',
+                        'path' => 'v4/{+name}/notifications',
                         'httpMethod' => 'GET',
                         'parameters' => array(
                             'name' => array(
