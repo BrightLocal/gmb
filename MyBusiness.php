@@ -8638,6 +8638,8 @@ class Google_Service_MyBusiness_Location extends Google_Collection
     public $additionalPhones;
     protected $addressType = 'Google_Service_MyBusiness_PostalAddress';
     protected $addressDataType = '';
+    protected $storefrontAddressType = 'Google_Service_MyBusiness_PostalAddress';
+    protected $storefrontAddressDataType = '';
     protected $attributesType = 'Google_Service_MyBusiness_Attribute';
     protected $attributesDataType = 'array';
     public $labels;
@@ -8697,6 +8699,10 @@ class Google_Service_MyBusiness_Location extends Google_Collection
     {
         return $this->additionalPhones;
     }
+    /**
+     * @deprecated 
+     * @see setStorefrontAddress()
+     */
     public function setAddress(Google_Service_MyBusiness_PostalAddress $address)
     {
         $this->address = $address;
@@ -8704,6 +8710,14 @@ class Google_Service_MyBusiness_Location extends Google_Collection
     public function getAddress()
     {
         return $this->address;
+    }
+    public function setStorefrontAddress(Google_Service_MyBusiness_PostalAddress $address)
+    {
+        $this->storefrontAddress = $address;
+    }
+    public function getStorefrontAddress()
+    {
+        return $this->storefrontAddress;
     }
     public function setAttributes($attributes)
     {
