@@ -8700,7 +8700,8 @@ class Google_Service_MyBusiness_Location extends Google_Collection
         return $this->additionalPhones;
     }
     /**
-     * @deprecated use setStorefrontAddress()
+     * @deprecated 
+     * @see setStorefrontAddress()
      */
     public function setAddress(Google_Service_MyBusiness_PostalAddress $address)
     {
